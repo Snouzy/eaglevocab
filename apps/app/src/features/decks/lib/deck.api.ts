@@ -36,3 +36,9 @@ export async function addCardToDeck(deckId: string, cardId: string) {
     body: JSON.stringify({ cardId }),
   });
 }
+
+export async function removeCardFromDeck(deckId: string, cardId: string) {
+  return apiClient<ApiResponse<void>>(`/api/decks/${deckId}/cards/${cardId}`, {
+    method: "DELETE",
+  });
+}
