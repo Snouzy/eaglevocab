@@ -1,0 +1,13 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": true,
+  "tsx": true,
+  "aliasedPath": "@",
+  "aliases": {
+    "@/components/ui": "./src/components/ui",
+    "@/components": "./src/components",
+    "@/lib": "./src/shared/lib",
+    "@/hooks": "./src/shared/hooks"
+  }
+}
