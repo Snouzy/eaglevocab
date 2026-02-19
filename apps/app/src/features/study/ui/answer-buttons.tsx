@@ -21,7 +21,7 @@ export function AnswerButtons({ onAnswer, disabled }: AnswerButtonsProps) {
           onClick={() => onAnswer(btn.quality)}
           disabled={disabled}
           className={cn(
-            "px-6 py-3 rounded-xl font-semibold transition-all transform active:scale-95",
+            "px-8 py-4 rounded-xl font-semibold transition-all transform active:scale-95",
             "disabled:opacity-30 disabled:cursor-not-allowed disabled:transform-none",
             btn.className
           )}

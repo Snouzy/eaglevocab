@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
-import { LogOut, Menu } from "lucide-react";
+import { Link } from "react-router";
+import { BookOpen, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,11 +13,7 @@ import { Button } from "@/components/ui/button";
 import { authClient, useSession } from "@/features/auth/lib/auth-client";
 import { toast } from "sonner";
 
-interface TopbarProps {
-  onMenuClick: () => void;
-}
-
-export function Topbar({ onMenuClick }: TopbarProps) {
+export function Topbar() {
   const navigate = useNavigate();
   const { data: session } = useSession();
 
@@ -32,15 +29,14 @@ export function Topbar({ onMenuClick }: TopbarProps) {
 
   return (
     <div className="h-16 bg-card shadow-sm flex items-center justify-between px-6">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="lg:hidden"
-        onClick={onMenuClick}
+      <Link
+        to="/dashboard"
+        className="flex items-center gap-2 font-bold text-foreground text-lg lg:hidden"
       >
-        <Menu className="h-5 w-5" />
-      </Button>
-      <div className="lg:flex-1" />
+        <BookOpen className="h-6 w-6 text-primary" />
+        EagleVocab
+      </Link>
+      <div className="hidden lg:block lg:flex-1" />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

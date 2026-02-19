@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDecks, useDeleteDeck } from "../hooks/use-decks";
 import { toast } from "sonner";
+import { Eye, Trash2 } from "lucide-react";
 
 export function DeckList() {
   const { data: decksData, isLoading } = useDecks();
@@ -29,7 +30,7 @@ export function DeckList() {
     return (
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
-          <Skeleton key={i} className="h-24" />
+          <Skeleton key={i} className="h-32" />
         ))}
       </div>
     );
@@ -54,31 +55,32 @@ export function DeckList() {
       {decks.map((deck: any) => (
         <Card key={deck.id} className="shadow-sm">
           <CardHeader>
-            <div className="flex items-start justify-between">
-              <div>
-                <CardTitle>{deck.name}</CardTitle>
-                <CardDescription>{deck.description}</CardDescription>
-              </div>
-              <div className="flex gap-2">
-                <Link to={`/decks/${deck.id}`}>
-                  <Button variant="outline" size="sm">
-                    View
-                  </Button>
-                </Link>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDelete(deck.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
+            <CardTitle className="truncate">{deck.name}</CardTitle>
+            {deck.description && (
+              <CardDescription className="line-clamp-2">
+                {deck.description}
+              </CardDescription>
+            )}
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
-              {deck.cardCount || 0} cards
+            <p className="text-sm text-muted-foreground mb-3">
+              {deck.cards?.length ?? 0} cards
             </p>
+            <div className="flex gap-2">
+              <Link to={`/decks/${deck.id}`} className="flex-1">
+                <Button variant="default" size="sm" className="w-full">
+                  <Eye className="mr-2 h-4 w-4" />
+                  View
+                </Button>
+              </Link>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => handleDelete(deck.id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ))}

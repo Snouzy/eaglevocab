@@ -116,7 +116,7 @@ export function CardCreateForm() {
   const decks = decksData?.data?.decks || [];
 
   return (
-    <Card className="w-full max-w-2xl">
+    <Card className="w-full max-w-2xl shadow-sm">
       <CardHeader>
         <CardTitle>Create New Card</CardTitle>
         <CardDescription>
@@ -314,6 +314,7 @@ export function CardCreateForm() {
 
           <Button
             type="submit"
+            variant="success"
             disabled={createCardMutation.isPending}
             className="w-full"
           >

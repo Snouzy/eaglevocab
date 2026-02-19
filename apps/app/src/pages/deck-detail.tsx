@@ -155,13 +155,13 @@ export function DeckDetailPage() {
         </div>
         <div className="flex gap-2 shrink-0">
           <ReactRouterLink to={`/study/${deckId}?mode=normal`}>
-            <Button disabled={cards.length === 0}>
+            <Button variant="success" disabled={cards.length === 0}>
               <GraduationCap className="mr-2 h-4 w-4" />
               Study
             </Button>
           </ReactRouterLink>
           <ReactRouterLink to={`/study/${deckId}?mode=reverse`}>
-            <Button variant="outline" disabled={cards.length === 0}>
+            <Button variant="outline" className="text-success border-success hover:bg-success/10 hover:text-success" disabled={cards.length === 0}>
               <GraduationCap className="mr-2 h-4 w-4" />
               Reverse
             </Button>

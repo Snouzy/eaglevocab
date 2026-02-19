@@ -208,6 +208,7 @@ export function CardEditDialog({ card, deckId, trigger }: CardEditDialogProps) {
             Cancel
           </Button>
           <Button
+            variant="success"
             onClick={handleSave}
             disabled={updateCardMutation.isPending}
           >

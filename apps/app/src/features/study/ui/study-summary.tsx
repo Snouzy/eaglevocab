@@ -36,11 +36,11 @@ export function StudySummary({
           <p className="text-sm text-muted-foreground">Cards</p>
         </div>
         <div className="p-4">
-          <p className="text-4xl font-bold text-green-500">{correct}</p>
+          <p className="text-4xl font-bold text-success">{correct}</p>
           <p className="text-sm text-muted-foreground">Correct</p>
         </div>
         <div className="p-4">
-          <p className="text-4xl font-bold text-red-500">{incorrect}</p>
+          <p className="text-4xl font-bold text-destructive">{incorrect}</p>
           <p className="text-sm text-muted-foreground">To Review</p>
         </div>
       </div>
@@ -53,9 +53,9 @@ export function StudySummary({
           >
             <span className="font-medium">{r.word}</span>
             {r.quality >= 3 ? (
-              <CheckCircle className="h-5 w-5 text-green-500" />
+              <CheckCircle className="h-5 w-5 text-success" />
             ) : (
-              <XCircle className="h-5 w-5 text-red-500" />
+              <XCircle className="h-5 w-5 text-destructive" />
             )}
           </div>
         ))}
@@ -65,7 +65,7 @@ export function StudySummary({
         <Button variant="outline" size="lg" onClick={onBackToDeck}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Deck
         </Button>
-        <Button size="lg" onClick={onStudyAgain}>
+        <Button variant="success" size="lg" onClick={onStudyAgain}>
           <RotateCcw className="mr-2 h-4 w-4" /> Study Again
         </Button>
       </div>
