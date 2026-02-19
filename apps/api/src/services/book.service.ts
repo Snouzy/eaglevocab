@@ -1,5 +1,6 @@
 import { CreateBookInput, UpdateBookInput } from "@eagle-vocab/types";
 import { bookRepository } from "../repositories/book.repository";
+import { cardRepository } from "../repositories/card.repository";
 import { AppError } from "../middlewares/error.middleware";
 import { logger } from "../helpers/logger";
 
@@ -130,6 +131,30 @@ export const removeCardFromBook = async (
     await bookRepository.removeCardFromBook(bookId, cardId);
   } catch (error) {
     logger.error("Remove card from book error", error);
+    throw error;
+  }
+};
+
+export const getStudyCards = async (userId: string, bookId: string) => {
+  try {
+    const book = await bookRepository.findById(bookId);
+
+    if (!book) {
+      throw new AppError("BOOK_NOT_FOUND", "Book not found", 404);
+    }
+
+    if (book.userId !== userId) {
+      throw new AppError(
+        "UNAUTHORIZED",
+        "You do not have permission to access this book",
+        403
+      );
+    }
+
+    const cards = await cardRepository.findAllByBookId(bookId);
+    return { cards, bookTitle: book.title };
+  } catch (error) {
+    logger.error("Get book study cards error", error);
     throw error;
   }
 };

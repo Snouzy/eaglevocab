@@ -101,3 +101,19 @@ export const removeCardFromBook = async (
     next(error);
   }
 };
+
+export const getStudyCards = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = req.user!.id;
+    const bookId = req.params.id as string;
+
+    const result = await bookService.getStudyCards(userId, bookId);
+    sendSuccess(res, result);
+  } catch (error) {
+    next(error);
+  }
+};

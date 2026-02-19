@@ -148,4 +148,15 @@ export const cardRepository = {
       orderBy: { createdAt: "asc" },
     });
   },
+
+  findAllByBookId: async (bookId: string) => {
+    return prisma.card.findMany({
+      where: { bookId },
+      include: {
+        sourceLanguage: true,
+        targetLanguage: true,
+      },
+      orderBy: { createdAt: "asc" },
+    });
+  },
 };

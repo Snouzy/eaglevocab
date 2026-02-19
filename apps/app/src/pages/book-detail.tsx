@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Plus, Pencil, X } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, X, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 
 export function BookDetailPage() {
@@ -49,7 +49,19 @@ export function BookDetailPage() {
             </>
           )}
         </div>
-        <div className="shrink-0">
+        <div className="flex gap-2 shrink-0">
+          <ReactRouterLink to={`/study/book/${bookId}?mode=normal`}>
+            <Button variant="success" disabled={cards.length === 0}>
+              <GraduationCap className="mr-2 h-4 w-4" />
+              Study
+            </Button>
+          </ReactRouterLink>
+          <ReactRouterLink to={`/study/book/${bookId}?mode=reverse`}>
+            <Button variant="outline" className="text-success border-success hover:bg-success/10 hover:text-success" disabled={cards.length === 0}>
+              <GraduationCap className="mr-2 h-4 w-4" />
+              Reverse
+            </Button>
+          </ReactRouterLink>
           <Button onClick={() => navigate(`/cards/new?bookId=${bookId}`)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Word

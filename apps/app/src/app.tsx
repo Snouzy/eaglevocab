@@ -46,7 +46,10 @@ const router = createBrowserRouter([
         <StudyLayout />
       </AuthGuard>
     ),
-    children: [{ path: "/study/:deckId", element: <StudyPage /> }],
+    children: [
+      { path: "/study/:deckId", element: <StudyPage /> },
+      { path: "/study/book/:bookId", element: <StudyPage /> },
+    ],
   },
   { path: "/", element: <Navigate to="/dashboard" replace /> },
   { path: "*", element: <Navigate to="/dashboard" replace /> },

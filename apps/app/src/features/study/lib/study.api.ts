@@ -7,6 +7,12 @@ export async function getStudyCards(deckId: string) {
   );
 }
 
+export async function getBookStudyCards(bookId: string) {
+  return apiClient<ApiResponse<{ cards: any[]; bookTitle: string }>>(
+    `/api/books/${bookId}/study-cards`
+  );
+}
+
 export async function reviewCard(cardId: string, data: ReviewCardInput) {
   return apiClient<ApiResponse<any>>(`/api/cards/${cardId}/review`, {
     method: "POST",

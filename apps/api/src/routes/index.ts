@@ -97,6 +97,7 @@ router.patch(
 );
 router.delete("/books/:id", authMiddleware, bookController.deleteBook);
 router.delete("/books/:id/cards/:cardId", authMiddleware, bookController.removeCardFromBook);
+router.get("/books/:id/study-cards", authMiddleware, bookController.getStudyCards);
 
 router.get("/settings", authMiddleware, settingsController.getSettings);
 router.patch(

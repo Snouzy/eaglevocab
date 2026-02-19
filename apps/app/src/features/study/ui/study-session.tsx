@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { X } from "lucide-react";
-import { useStudyCards, useReviewCard } from "../hooks/use-study";
+import { useStudyCards, useBookStudyCards, useReviewCard } from "../hooks/use-study";
 import { StudyCardComponent } from "./study-card";
 import { AnswerButtons } from "./answer-buttons";
 import { StudyProgress } from "./study-progress";
@@ -19,18 +19,22 @@ import {
 } from "../lib/study-session";
 
 interface StudySessionProps {
-  deckId: string;
+  deckId?: string;
+  bookId?: string;
   mode: StudyMode;
 }
 
-export function StudySession({ deckId, mode }: StudySessionProps) {
+export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
   const navigate = useNavigate();
-  const { data, isLoading } = useStudyCards(deckId);
+  const deckQuery = useStudyCards(deckId || "");
+  const bookQuery = useBookStudyCards(bookId || "");
+  const isBook = !!bookId;
+  const { data, isLoading } = isBook ? bookQuery : deckQuery;
   const reviewMutation = useReviewCard();
   const [session, setSession] = useState<SessionState | null>(null);
 
   const cards = data?.data?.cards;
-  const deckName = data?.data?.deckName || "Deck";
+  const sessionName = isBook ? (data?.data?.bookTitle || "Book") : (data?.data?.deckName || "Deck");
 
   useEffect(() => {
     if (cards && cards.length > 0 && !session) {
@@ -54,8 +58,12 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
   );
 
   const handleExit = useCallback(() => {
-    navigate(`/decks/${deckId}`);
-  }, [navigate, deckId]);
+    if (isBook) {
+      navigate(`/books/${bookId}`);
+    } else {
+      navigate(`/decks/${deckId}`);
+    }
+  }, [navigate, deckId, bookId, isBook]);
 
   const handleStudyAgain = useCallback(() => {
     if (!cards) return;
@@ -83,8 +91,10 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
     return (
       <div className="flex flex-col items-center justify-center h-dvh gap-4 p-6">
         <h1 className="text-2xl font-bold">No cards to study</h1>
-        <p className="text-muted-foreground">Add some cards to this deck first.</p>
-        <Button onClick={handleExit}>Back to Deck</Button>
+        <p className="text-muted-foreground">
+          {isBook ? "Add some words to this book first." : "Add some cards to this deck first."}
+        </p>
+        <Button onClick={handleExit}>{isBook ? "Back to Book" : "Back to Deck"}</Button>
       </div>
     );
   }
@@ -95,7 +105,7 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
     return (
       <StudySummary
         results={session.results}
-        deckName={deckName}
+        deckName={sessionName}
         onStudyAgain={handleStudyAgain}
         onBackToDeck={handleExit}
       />
@@ -110,7 +120,7 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
       <div className="flex items-center justify-between px-4 py-3 shrink-0">
         <div className="min-w-0">
           <p className="text-sm font-semibold truncate">
-            {mode === "normal" ? "Normal" : "Reverse"} — {deckName}
+            {mode === "normal" ? "Normal" : "Reverse"} — {sessionName}
           </p>
         </div>
         <Button
