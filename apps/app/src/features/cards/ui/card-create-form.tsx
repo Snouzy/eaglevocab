@@ -23,7 +23,7 @@ import { useCreateCard } from "../hooks/use-create-card";
 import { useLanguages } from "../hooks/use-languages";
 import { useDecks } from "@/features/decks/hooks/use-decks";
 import { useSettings } from "@/features/settings/hooks/use-settings";
-import { useBookDetail } from "@/features/books/hooks/use-books";
+import { useBooks, useBookDetail } from "@/features/books/hooks/use-books";
 
 interface TranslationResult {
   translation: string | null;
@@ -56,6 +56,7 @@ export function CardCreateForm() {
   const createCardMutation = useCreateCard();
   const { data: languagesData } = useLanguages();
   const { data: decksData } = useDecks();
+  const { data: booksData } = useBooks();
   const { data: settingsData } = useSettings();
 
   const languages = languagesData?.data || [];
@@ -73,6 +74,12 @@ export function CardCreateForm() {
   const word = watch("word");
   const sourceLanguageId = watch("sourceLanguageId");
   const targetLanguageId = watch("targetLanguageId");
+
+  useEffect(() => {
+    if (bookId) {
+      setValue("bookId", bookId);
+    }
+  }, [bookId, setValue]);
 
   useEffect(() => {
     if (bookDetailData?.data?.languageId && !sourceLanguageId) {
@@ -139,7 +146,7 @@ export function CardCreateForm() {
 
   async function onSubmit(data: CreateCardInput) {
     try {
-      await createCardMutation.mutateAsync({ ...data, ...(bookId && { bookId }) });
+      await createCardMutation.mutateAsync(data);
       setJustSaved(true);
       toast.success("Card created successfully");
       setTranslationResult(null);
@@ -151,6 +158,7 @@ export function CardCreateForm() {
   }
 
   const decks = decksData?.data?.decks || [];
+  const books = booksData?.data?.books || [];
 
   const resultFields: { key: string; label: string; field: "translation" | "pronunciation" | "definition"; show: boolean; value: string | null }[] = [
     { key: "translation", label: "Translation", field: "translation", show: includeTranslation, value: translationResult?.translation ?? null },
@@ -419,6 +427,31 @@ export function CardCreateForm() {
                 {decks.map((deck: any) => (
                   <SelectItem key={deck.id} value={deck.id}>
                     {deck.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Book selector */}
+      <AnimatePresence>
+        {books.length > 0 && !bookId && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12 }}
+          >
+            <Label htmlFor="book">Add to Book (Optional)</Label>
+            <Select onValueChange={(value) => setValue("bookId", value)}>
+              <SelectTrigger id="book" className="mt-1">
+                <SelectValue placeholder="Select a book..." />
+              </SelectTrigger>
+              <SelectContent>
+                {books.map((book: any) => (
+                  <SelectItem key={book.id} value={book.id}>
+                    {book.language?.flag} {book.title}
                   </SelectItem>
                 ))}
               </SelectContent>
