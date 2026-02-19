@@ -38,7 +38,7 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
   }, [cards, mode, session]);
 
   const handleFlip = useCallback(() => {
-    if (!session || session.isFlipped || session.isComplete) return;
+    if (!session || session.isComplete) return;
     setSession(flipCard(session));
   }, [session]);
 

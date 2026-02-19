@@ -47,7 +47,7 @@ export function shuffleCards<T>(cards: T[]): T[] {
 }
 
 export function flipCard(state: SessionState): SessionState {
-  return { ...state, isFlipped: true };
+  return { ...state, isFlipped: !state.isFlipped };
 }
 
 export function answerCard(state: SessionState, quality: number): SessionState {
