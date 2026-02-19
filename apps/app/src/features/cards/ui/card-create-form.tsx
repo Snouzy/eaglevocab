@@ -74,6 +74,7 @@ export function CardCreateForm() {
   const word = watch("word");
   const sourceLanguageId = watch("sourceLanguageId");
   const targetLanguageId = watch("targetLanguageId");
+  const selectedBookId = watch("bookId");
 
   useEffect(() => {
     if (bookId) {
@@ -145,8 +146,12 @@ export function CardCreateForm() {
   }
 
   async function onSubmit(data: CreateCardInput) {
+    const effectiveBookId = selectedBookId || bookId;
     try {
-      await createCardMutation.mutateAsync(data);
+      await createCardMutation.mutateAsync({
+        ...data,
+        ...(effectiveBookId && { bookId: effectiveBookId }),
+      });
       setJustSaved(true);
       toast.success("Card created successfully");
       setTranslationResult(null);
