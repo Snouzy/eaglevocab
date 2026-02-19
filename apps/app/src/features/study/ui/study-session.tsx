@@ -29,13 +29,16 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
   const deckQuery = useStudyCards(deckId || "");
   const bookQuery = useBookStudyCards(bookId || "");
   const isBook = !!bookId;
-  const { data, isLoading } = isBook ? bookQuery : deckQuery;
   const reviewMutation = useReviewCard();
   const [session, setSession] = useState<SessionState | null>(null);
 
-  const responseData = data?.data as any;
-  const cards = responseData?.cards;
-  const sessionName = isBook ? (responseData?.bookTitle || "Book") : (responseData?.deckName || "Deck");
+  const isLoading = isBook ? bookQuery.isLoading : deckQuery.isLoading;
+  const cards = isBook
+    ? bookQuery.data?.data?.cards
+    : deckQuery.data?.data?.cards;
+  const sessionName = isBook
+    ? (bookQuery.data?.data?.bookTitle ?? "Book")
+    : (deckQuery.data?.data?.deckName ?? "Deck");
 
   useEffect(() => {
     if (cards && cards.length > 0 && !session) {
