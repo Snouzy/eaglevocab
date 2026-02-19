@@ -33,8 +33,9 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
   const reviewMutation = useReviewCard();
   const [session, setSession] = useState<SessionState | null>(null);
 
-  const cards = data?.data?.cards;
-  const sessionName = isBook ? (data?.data?.bookTitle || "Book") : (data?.data?.deckName || "Deck");
+  const responseData = data?.data as any;
+  const cards = responseData?.cards;
+  const sessionName = isBook ? (responseData?.bookTitle || "Book") : (responseData?.deckName || "Deck");
 
   useEffect(() => {
     if (cards && cards.length > 0 && !session) {
