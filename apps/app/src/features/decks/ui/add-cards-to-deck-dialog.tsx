@@ -1,14 +1,14 @@
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from "@/components/ui/responsive-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -96,20 +96,20 @@ export function AddCardsToDeckDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
+      <ResponsiveDialogTrigger asChild>
         <Button size="sm">
           <Plus className="mr-2 h-4 w-4" />
           Add Cards
         </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-lg max-h-[80vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Add Cards to Deck</DialogTitle>
-          <DialogDescription>
+      </ResponsiveDialogTrigger>
+      <ResponsiveDialogContent className="max-w-lg max-h-[80vh] flex flex-col">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Add Cards to Deck</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Select cards from your collection to add to this deck
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -157,7 +157,7 @@ export function AddCardsToDeckDialog({
           )}
         </div>
 
-        <DialogFooter>
+        <ResponsiveDialogFooter>
           <Button variant="outline" onClick={() => handleOpenChange(false)}>
             Cancel
           </Button>
@@ -169,8 +169,8 @@ export function AddCardsToDeckDialog({
               ? "Adding..."
               : `Add ${selectedCardIds.size || ""} Card${selectedCardIds.size !== 1 ? "s" : ""}`}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

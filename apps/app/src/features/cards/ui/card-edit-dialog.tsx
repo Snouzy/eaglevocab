@@ -1,14 +1,14 @@
 import { useState, ReactNode } from "react";
 import { toast } from "sonner";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from "@/components/ui/responsive-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -98,15 +98,15 @@ export function CardEditDialog({ card, deckId, trigger }: CardEditDialogProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
+      <ResponsiveDialogTrigger asChild>
         {trigger || <Button variant="outline" size="sm">Edit</Button>}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Card</DialogTitle>
-          <DialogDescription>Update the card information</DialogDescription>
-        </DialogHeader>
+      </ResponsiveDialogTrigger>
+      <ResponsiveDialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Edit Card</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>Update the card information</ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
@@ -203,7 +203,7 @@ export function CardEditDialog({ card, deckId, trigger }: CardEditDialogProps) {
           </div>
         </div>
 
-        <DialogFooter>
+        <ResponsiveDialogFooter>
           <Button variant="outline" onClick={() => handleOpenChange(false)}>
             Cancel
           </Button>
@@ -214,8 +214,8 @@ export function CardEditDialog({ card, deckId, trigger }: CardEditDialogProps) {
           >
             {updateCardMutation.isPending ? "Saving..." : "Save"}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }
