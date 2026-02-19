@@ -41,9 +41,12 @@ export function Topbar() {
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="relative h-9 w-9 rounded-full bg-primary text-primary-foreground text-sm font-medium"
+            className="relative flex items-center gap-2 h-10 rounded-full bg-primary text-primary-foreground text-sm font-medium px-3"
           >
-            {session?.user?.name?.[0]?.toUpperCase() || "U"}
+            <span className="h-8 w-8 rounded-full bg-primary-foreground/20 flex items-center justify-center text-sm font-bold">
+              {session?.user?.name?.[0]?.toUpperCase() || "U"}
+            </span>
+            <span className="hidden lg:inline text-sm">{session?.user?.name || "User"}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

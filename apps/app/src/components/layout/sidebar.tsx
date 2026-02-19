@@ -41,7 +41,7 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4">
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           {links.map((link) => {
             const Icon = link.icon;
             const isActive = getIsActive(location.pathname, link.href);
@@ -51,7 +51,7 @@ export function Sidebar() {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  "relative flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg mx-3 transition-colors",
+                  "relative flex items-center gap-3 px-4 py-3.5 text-base font-medium rounded-lg mx-3 transition-colors",
                   isActive
                     ? "text-sidebar-active"
                     : "text-sidebar-muted hover:text-sidebar-foreground hover:bg-muted"
@@ -64,7 +64,7 @@ export function Sidebar() {
                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                   />
                 )}
-                <Icon className="h-5 w-5 relative z-10" />
+                <Icon className="h-6 w-6 relative z-10" />
                 <span className="relative z-10">{link.label}</span>
               </Link>
             );

@@ -78,7 +78,7 @@ export function BookList() {
               )}
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="text-base text-muted-foreground mb-3">
                 {book.cards?.length ?? 0} words
               </p>
               <div className="flex gap-2">
@@ -92,8 +92,10 @@ export function BookList() {
                   variant="destructive"
                   size="sm"
                   onClick={() => handleDelete(book.id)}
+                  className="flex items-center gap-1.5"
                 >
                   <Trash2 className="h-4 w-4" />
+                  Delete
                 </Button>
               </div>
             </CardContent>

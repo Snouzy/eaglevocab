@@ -66,6 +66,7 @@ export function SignInForm() {
               required
               className="mt-1"
             />
+            <p className="text-sm text-muted-foreground mt-1">The email you used to sign up</p>
           </div>
           <div>
             <Label htmlFor="password">Password</Label>
@@ -82,7 +83,7 @@ export function SignInForm() {
           <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Signing in..." : "Sign In"}
           </Button>
-          <p className="text-sm text-center text-muted-foreground">
+          <p className="text-base text-center text-muted-foreground">
             Don't have an account?{" "}
             <Link to="/sign-up" className="text-primary hover:underline">
               Sign up

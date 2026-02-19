@@ -95,7 +95,7 @@ export function SettingsForm() {
           </div>
 
           <div className="space-y-3 p-3 bg-muted rounded">
-            <Label className="text-base font-semibold">Display Options</Label>
+            <Label className="text-lg font-semibold">Display Options</Label>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="showPronunciation" className="font-normal">
@@ -111,6 +111,7 @@ export function SettingsForm() {
                   }
                 />
               </div>
+              <p className="text-sm text-muted-foreground">Show how the word is pronounced</p>
               <div className="flex items-center justify-between">
                 <Label htmlFor="showDefinition" className="font-normal">
                   Show Definition
@@ -125,6 +126,7 @@ export function SettingsForm() {
                   }
                 />
               </div>
+              <p className="text-sm text-muted-foreground">Show the word's definition</p>
               <div className="flex items-center justify-between">
                 <Label htmlFor="showExamples" className="font-normal">
                   Show Examples
@@ -139,6 +141,7 @@ export function SettingsForm() {
                   }
                 />
               </div>
+              <p className="text-sm text-muted-foreground">Show example sentences</p>
             </div>
           </div>
 

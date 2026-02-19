@@ -15,14 +15,16 @@ const buttons = [
 
 export function AnswerButtons({ onAnswer, disabled }: AnswerButtonsProps) {
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={{
-        visible: { transition: { staggerChildren: 0.04 } },
-      }}
-      className="grid grid-cols-4 gap-2"
-    >
+    <>
+      <p className="text-sm text-muted-foreground text-center mb-2">How well did you remember this word?</p>
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={{
+          visible: { transition: { staggerChildren: 0.04 } },
+        }}
+        className="grid grid-cols-4 gap-2"
+      >
       {buttons.map((btn) => (
         <motion.button
           key={btn.quality}
@@ -35,15 +37,16 @@ export function AnswerButtons({ onAnswer, disabled }: AnswerButtonsProps) {
           onClick={() => onAnswer(btn.quality)}
           disabled={disabled}
           className={cn(
-            "py-3.5 rounded-xl font-semibold",
+            "py-4 rounded-xl font-semibold",
             "disabled:opacity-30 disabled:cursor-not-allowed",
             btn.className
           )}
         >
-          <span className="block text-base">{btn.label}</span>
-          <span className="block text-[10px] opacity-70 hidden sm:block">{btn.shortcut}</span>
+          <span className="block text-lg">{btn.label}</span>
+          <span className="block text-xs opacity-70">{btn.shortcut}</span>
         </motion.button>
       ))}
     </motion.div>
+    </>
   );
 }

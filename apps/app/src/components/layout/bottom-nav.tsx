@@ -17,7 +17,7 @@ export function BottomNav() {
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
-      <div className="flex items-center justify-around h-16 px-2">
+      <div className="flex items-center justify-around h-[72px] px-2">
         {links.map((link) => {
           const Icon = link.icon;
           const isActive =
@@ -29,7 +29,7 @@ export function BottomNav() {
               key={link.href}
               to={link.href}
               className={cn(
-                "relative flex flex-col items-center justify-center gap-0.5 min-w-[3.5rem] py-1 rounded-lg transition-colors",
+                "relative flex flex-col items-center justify-center gap-1 min-w-[4rem] py-2 rounded-lg transition-colors",
                 isActive
                   ? "text-primary"
                   : "text-muted-foreground active:text-foreground"
@@ -38,12 +38,12 @@ export function BottomNav() {
               {isActive && (
                 <motion.div
                   layoutId="bottomNavIndicator"
-                  className="absolute -top-1 w-5 h-0.5 bg-primary rounded-full"
+                  className="absolute -top-1 w-6 h-0.5 bg-primary rounded-full"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
-              <Icon className={cn("h-5 w-5", isActive && "stroke-[2.5]")} />
-              <span className="text-[10px] font-medium leading-tight">
+              <Icon className={cn("h-6 w-6", isActive && "stroke-[2.5]")} />
+              <span className="text-xs font-medium leading-tight">
                 {link.label}
               </span>
             </Link>

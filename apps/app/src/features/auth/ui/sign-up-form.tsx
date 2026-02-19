@@ -92,11 +92,12 @@ export function SignUpForm() {
               required
               className="mt-1"
             />
+            <p className="text-sm text-muted-foreground mt-1">At least 8 characters</p>
           </div>
           <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Creating account..." : "Sign Up"}
           </Button>
-          <p className="text-sm text-center text-muted-foreground">
+          <p className="text-base text-center text-muted-foreground">
             Already have an account?{" "}
             <Link to="/sign-in" className="text-primary hover:underline">
               Sign in

@@ -13,16 +13,16 @@ export function StudyCardComponent({ card, isFlipped, mode, onFlip }: StudyCardP
     <div className="text-center space-y-3">
       <p className="text-3xl sm:text-4xl font-bold">{card.word}</p>
       {card.pronunciation && (
-        <p className="text-lg text-muted-foreground">{card.pronunciation}</p>
+        <p className="text-xl text-muted-foreground">{card.pronunciation}</p>
       )}
-      <p className="text-xs text-muted-foreground pt-2">
+      <p className="text-sm text-muted-foreground pt-2">
         {card.sourceLanguage.flag} {card.sourceLanguage.name}
       </p>
     </div>
   ) : (
     <div className="text-center space-y-3">
       <p className="text-3xl sm:text-4xl font-bold">{card.translation || "—"}</p>
-      <p className="text-xs text-muted-foreground pt-2">
+      <p className="text-sm text-muted-foreground pt-2">
         {card.targetLanguage.flag} {card.targetLanguage.name}
       </p>
     </div>
@@ -32,12 +32,12 @@ export function StudyCardComponent({ card, isFlipped, mode, onFlip }: StudyCardP
     <div className="text-center space-y-4 w-full">
       <p className="text-2xl sm:text-3xl font-bold">{card.translation || "—"}</p>
       {card.definition && (
-        <p className="text-base text-muted-foreground">{card.definition}</p>
+        <p className="text-lg text-muted-foreground">{card.definition}</p>
       )}
       {card.examples && card.examples.length > 0 && (
         <div className="space-y-2 pt-2 border-t border-border text-left">
           {card.examples.map((ex: any, i: number) => (
-            <div key={i} className="p-2.5 bg-muted rounded-lg text-sm">
+            <div key={i} className="p-2.5 bg-muted rounded-lg text-base">
               <p className="font-medium">{ex.sentence}</p>
               <p className="text-muted-foreground">{ex.translation}</p>
             </div>
@@ -49,15 +49,15 @@ export function StudyCardComponent({ card, isFlipped, mode, onFlip }: StudyCardP
     <div className="text-center space-y-4 w-full">
       <p className="text-2xl sm:text-3xl font-bold">{card.word}</p>
       {card.pronunciation && (
-        <p className="text-base text-muted-foreground">{card.pronunciation}</p>
+        <p className="text-xl text-muted-foreground">{card.pronunciation}</p>
       )}
       {card.definition && (
-        <p className="text-sm text-muted-foreground">{card.definition}</p>
+        <p className="text-lg text-muted-foreground">{card.definition}</p>
       )}
       {card.examples && card.examples.length > 0 && (
         <div className="space-y-2 pt-2 border-t border-border text-left">
           {card.examples.map((ex: any, i: number) => (
-            <div key={i} className="p-2.5 bg-muted rounded-lg text-sm">
+            <div key={i} className="p-2.5 bg-muted rounded-lg text-base">
               <p className="font-medium">{ex.sentence}</p>
               <p className="text-muted-foreground">{ex.translation}</p>
             </div>

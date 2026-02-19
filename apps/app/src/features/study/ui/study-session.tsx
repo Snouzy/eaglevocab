@@ -123,7 +123,7 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 shrink-0">
         <div className="min-w-0">
-          <p className="text-sm font-semibold truncate">
+          <p className="text-base font-semibold truncate">
             {mode === "normal" ? "Normal" : "Reverse"} — {sessionName}
           </p>
         </div>
@@ -134,7 +134,7 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
           className="shrink-0 text-muted-foreground hover:text-foreground"
         >
           <X className="h-5 w-5" />
-          <span className="ml-1 text-xs hidden sm:inline">ESC</span>
+          <span className="ml-1 text-xs">ESC</span>
         </Button>
       </div>
 
@@ -178,7 +178,7 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.15 }}
               onClick={handleFlip}
-              className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-semibold text-lg active:scale-[0.98] transition-transform"
+              className="w-full py-5 rounded-xl bg-primary text-primary-foreground font-semibold text-xl active:scale-[0.98] transition-transform"
             >
               Tap to flip
             </motion.button>
@@ -194,7 +194,7 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
             </motion.div>
           )}
         </AnimatePresence>
-        <p className="text-center text-xs text-muted-foreground mt-2 hidden sm:block">
+        <p className="text-center text-sm text-muted-foreground mt-2">
           {!session.isFlipped
             ? "Press Space to flip"
             : "Press 1-4 to rate"

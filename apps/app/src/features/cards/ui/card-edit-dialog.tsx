@@ -191,7 +191,7 @@ export function CardEditDialog({ card, deckId, trigger }: CardEditDialogProps) {
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                      className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive shrink-0"
                       onClick={() => removeExample(i)}
                     >
                       <Trash2 className="h-3 w-3" />

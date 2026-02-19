@@ -71,6 +71,7 @@ export function BookCreateDialog() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="title">Book Title</Label>
+            <p className="text-sm text-muted-foreground mt-0.5">The name of the book you're reading</p>
             <Input
               id="title"
               placeholder="French Travel Guide"
@@ -85,6 +86,7 @@ export function BookCreateDialog() {
           </div>
           <div>
             <Label htmlFor="author">Author (Optional)</Label>
+            <p className="text-sm text-muted-foreground mt-0.5">The author's name (optional)</p>
             <Input
               id="author"
               placeholder="John Doe"
@@ -94,6 +96,7 @@ export function BookCreateDialog() {
           </div>
           <div>
             <Label htmlFor="language">Language</Label>
+            <p className="text-sm text-muted-foreground mt-0.5">The language the book is written in</p>
             <Select
               value={languageId}
               onValueChange={(value) => setValue("languageId", value)}

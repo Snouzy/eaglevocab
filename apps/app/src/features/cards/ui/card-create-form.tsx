@@ -183,6 +183,7 @@ export function CardCreateForm() {
       <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="sourceLanguage">Source Language</Label>
+          <p className="text-sm text-muted-foreground mt-0.5">The language of the word you're learning</p>
           <Select
             value={sourceLanguageId}
             onValueChange={(value) => setValue("sourceLanguageId", value)}
@@ -201,6 +202,7 @@ export function CardCreateForm() {
         </div>
         <div>
           <Label htmlFor="targetLanguage">Target Language</Label>
+          <p className="text-sm text-muted-foreground mt-0.5">Your native language</p>
           <Select
             value={targetLanguageId}
             onValueChange={(value) => setValue("targetLanguageId", value)}
@@ -247,7 +249,7 @@ export function CardCreateForm() {
         <button
           type="button"
           onClick={() => setOptionsOpen(!optionsOpen)}
-          className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-base font-semibold text-muted-foreground hover:text-foreground transition-colors"
         >
           <motion.span
             animate={{ rotate: optionsOpen ? 180 : 0 }}
@@ -424,6 +426,7 @@ export function CardCreateForm() {
             transition={{ delay: 0.1 }}
           >
             <Label htmlFor="deck">Add to Deck (Optional)</Label>
+            <p className="text-sm text-muted-foreground mt-0.5">Choose a deck to organize this card</p>
             <Select onValueChange={(value) => setValue("deckId", value)}>
               <SelectTrigger id="deck" className="mt-1">
                 <SelectValue placeholder="Select a deck..." />
@@ -449,6 +452,7 @@ export function CardCreateForm() {
             transition={{ delay: 0.12 }}
           >
             <Label htmlFor="book">Add to Book (Optional)</Label>
+            <p className="text-sm text-muted-foreground mt-0.5">Choose the book you found this word in</p>
             <Select onValueChange={(value) => setValue("bookId", value)}>
               <SelectTrigger id="book" className="mt-1">
                 <SelectValue placeholder="Select a book..." />

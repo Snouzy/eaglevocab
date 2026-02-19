@@ -79,7 +79,7 @@ export function CardList() {
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-3 truncate">
+              <p className="text-base text-muted-foreground mb-3 truncate">
                 {card.translation || "No translation"}
               </p>
               <div className="flex gap-2">
@@ -87,7 +87,7 @@ export function CardList() {
                   card={card}
                   trigger={
                     <Button variant="default" size="sm" className="flex-1">
-                      <Pencil className="mr-2 h-4 w-4" />
+                      <Pencil className="mr-1.5 h-4 w-4" />
                       Edit
                     </Button>
                   }
@@ -96,8 +96,10 @@ export function CardList() {
                   variant="destructive"
                   size="sm"
                   onClick={() => handleDelete(card.id)}
+                  className="flex items-center gap-1.5"
                 >
                   <Trash2 className="h-4 w-4" />
+                  Delete
                 </Button>
               </div>
             </CardContent>

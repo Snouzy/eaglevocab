@@ -73,6 +73,7 @@ export function BookDetailPage() {
         <CardHeader>
           <CardTitle>Words in this book</CardTitle>
           <CardDescription>{cards.length} words total</CardDescription>
+          <p className="text-sm text-muted-foreground mt-1">Tap a word to edit it, or use the buttons on the right.</p>
         </CardHeader>
         <CardContent>
           {bookLoading ? (
@@ -88,11 +89,11 @@ export function BookDetailPage() {
               {cards.map((card: any) => (
                 <div
                   key={card.id}
-                  className="flex justify-between items-center p-3 border border-border rounded-lg hover:bg-muted transition-colors"
+                  className="flex justify-between items-center p-4 border border-border rounded-lg hover:bg-muted transition-colors"
                 >
                   <div>
-                    <p className="font-medium">{card.word}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-medium text-base">{card.word}</p>
+                    <p className="text-base text-muted-foreground">
                       {card.translation}
                     </p>
                   </div>
@@ -101,7 +102,8 @@ export function BookDetailPage() {
                       card={card}
                       trigger={
                         <Button variant="ghost" size="sm">
-                          <Pencil className="h-4 w-4" />
+                          <Pencil className="h-4 w-4 mr-1.5" />
+                          Edit
                         </Button>
                       }
                     />
@@ -118,7 +120,8 @@ export function BookDetailPage() {
                         }
                       }}
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-4 w-4 mr-1.5" />
+                      Remove
                     </Button>
                   </div>
                 </div>

@@ -49,15 +49,15 @@ export function StudySummary({
         >
           <div>
             <p className="text-2xl font-bold">{total}</p>
-            <p className="text-xs text-muted-foreground">Cards</p>
+            <p className="text-sm text-muted-foreground">Cards</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-success">{correct}</p>
-            <p className="text-xs text-muted-foreground">Correct</p>
+            <p className="text-sm text-muted-foreground">Correct</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-destructive">{incorrect}</p>
-            <p className="text-xs text-muted-foreground">To Review</p>
+            <p className="text-sm text-muted-foreground">To Review</p>
           </div>
         </motion.div>
       </div>

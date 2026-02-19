@@ -20,24 +20,24 @@ export function DashboardPage() {
   const cards = cardsData?.data?.cards || [];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back to EagleVocab</p>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-muted-foreground">Here's an overview of your vocabulary</p>
       </div>
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <Card className="shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Decks</CardTitle>
+            <CardTitle className="text-base font-medium">Total Decks</CardTitle>
           </CardHeader>
           <CardContent>
             {decksLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-bold">{decks.length}</div>
+              <div className="text-3xl font-bold">{decks.length}</div>
             )}
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Organized learning sets
             </p>
           </CardContent>
@@ -45,31 +45,31 @@ export function DashboardPage() {
 
         <Card className="shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Books</CardTitle>
+            <CardTitle className="text-base font-medium">Total Books</CardTitle>
           </CardHeader>
           <CardContent>
             {booksLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-bold">{books.length}</div>
+              <div className="text-3xl font-bold">{books.length}</div>
             )}
-            <p className="text-xs text-muted-foreground mt-1">
-              Collections of decks
+            <p className="text-sm text-muted-foreground mt-1">
+              Books you're reading
             </p>
           </CardContent>
         </Card>
 
         <Card className="shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Cards</CardTitle>
+            <CardTitle className="text-base font-medium">Total Cards</CardTitle>
           </CardHeader>
           <CardContent>
             {cardsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-2xl font-bold">{cards.length}</div>
+              <div className="text-3xl font-bold">{cards.length}</div>
             )}
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Vocabulary words
             </p>
           </CardContent>
@@ -100,8 +100,8 @@ export function DashboardPage() {
                     key={card.id}
                     className="flex justify-between items-center p-2 border-b"
                   >
-                    <span className="font-medium">{card.word}</span>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="font-medium text-base">{card.word}</span>
+                    <span className="text-base text-muted-foreground">
                       {card.translation}
                     </span>
                   </div>

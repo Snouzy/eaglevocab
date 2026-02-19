@@ -56,6 +56,7 @@ export function DeckCreateDialog() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="name">Deck Name</Label>
+            <p className="text-sm text-muted-foreground mt-0.5">Give your deck a clear name</p>
             <Input
               id="name"
               placeholder="My French Vocabulary"
@@ -70,6 +71,7 @@ export function DeckCreateDialog() {
           </div>
           <div>
             <Label htmlFor="description">Description (Optional)</Label>
+            <p className="text-sm text-muted-foreground mt-0.5">What kind of words will be in this deck?</p>
             <Input
               id="description"
               placeholder="A deck for learning French..."
