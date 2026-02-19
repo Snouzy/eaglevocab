@@ -16,7 +16,6 @@ export const deckRepository = {
           },
           orderBy: { position: "asc" },
         },
-        book: true,
       },
     });
   },
@@ -42,7 +41,6 @@ export const deckRepository = {
             },
           },
         },
-        book: true,
       },
       orderBy: { createdAt: "desc" },
     });
@@ -69,7 +67,6 @@ export const deckRepository = {
             },
           },
         },
-        book: true,
       },
     });
   },
@@ -89,7 +86,6 @@ export const deckRepository = {
             },
           },
         },
-        book: true,
       },
     });
   },

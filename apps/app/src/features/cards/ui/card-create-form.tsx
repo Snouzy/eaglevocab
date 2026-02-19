@@ -17,11 +17,13 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { ChevronDown, Loader2, Check } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
+import { useSearchParams } from "react-router";
 import { useTranslate } from "../hooks/use-translate";
 import { useCreateCard } from "../hooks/use-create-card";
 import { useLanguages } from "../hooks/use-languages";
 import { useDecks } from "@/features/decks/hooks/use-decks";
 import { useSettings } from "@/features/settings/hooks/use-settings";
+import { useBookDetail } from "@/features/books/hooks/use-books";
 
 interface TranslationResult {
   translation: string | null;
@@ -46,6 +48,10 @@ export function CardCreateForm() {
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
 
+  const [searchParams] = useSearchParams();
+  const bookId = searchParams.get("bookId");
+  const { data: bookDetailData } = useBookDetail(bookId || "");
+
   const translateMutation = useTranslate();
   const createCardMutation = useCreateCard();
   const { data: languagesData } = useLanguages();
@@ -67,6 +73,12 @@ export function CardCreateForm() {
   const word = watch("word");
   const sourceLanguageId = watch("sourceLanguageId");
   const targetLanguageId = watch("targetLanguageId");
+
+  useEffect(() => {
+    if (bookDetailData?.data?.languageId && !sourceLanguageId) {
+      setValue("sourceLanguageId", bookDetailData.data.languageId);
+    }
+  }, [bookDetailData, sourceLanguageId, setValue]);
 
   useEffect(() => {
     if (settingsData?.data?.nativeLanguageId && !targetLanguageId) {
@@ -127,7 +139,7 @@ export function CardCreateForm() {
 
   async function onSubmit(data: CreateCardInput) {
     try {
-      await createCardMutation.mutateAsync(data);
+      await createCardMutation.mutateAsync({ ...data, ...(bookId && { bookId }) });
       setJustSaved(true);
       toast.success("Card created successfully");
       setTranslationResult(null);

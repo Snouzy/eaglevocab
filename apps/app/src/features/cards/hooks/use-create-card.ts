@@ -8,6 +8,8 @@ export function useCreateCard() {
     mutationFn: createCard,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cards"] });
+      queryClient.invalidateQueries({ queryKey: ["books"] });
+      queryClient.invalidateQueries({ queryKey: ["book"] });
     },
   });
 }

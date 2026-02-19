@@ -19,7 +19,7 @@ export function BookList() {
   const deleteBookMutation = useDeleteBook();
   const { confirm, confirmDialog } = useConfirm({
     title: "Delete this book?",
-    description: "All decks and cards linked to this book will be permanently deleted.",
+    description: "This book will be permanently deleted. Cards will remain in your collection.",
     confirmLabel: "Delete",
   });
 
@@ -79,7 +79,7 @@ export function BookList() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-3">
-                {book.decks?.length ?? 0} decks
+                {book.cards?.length ?? 0} words
               </p>
               <div className="flex gap-2">
                 <Link to={`/books/${book.id}`} className="flex-1">

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getBooks, getBookDetail, createBook, deleteBook } from "../lib/book.api";
+import { getBooks, getBookDetail, createBook, deleteBook, removeCardFromBook } from "../lib/book.api";
 
 export function useBooks() {
   return useQuery({
@@ -12,6 +12,7 @@ export function useBookDetail(bookId: string) {
   return useQuery({
     queryKey: ["book", bookId],
     queryFn: () => getBookDetail(bookId),
+    enabled: !!bookId,
   });
 }
 
@@ -32,6 +33,18 @@ export function useDeleteBook() {
   return useMutation({
     mutationFn: deleteBook,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["books"] });
+    },
+  });
+}
+
+export function useRemoveCardFromBook(bookId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (cardId: string) => removeCardFromBook(bookId, cardId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["book", bookId] });
       queryClient.invalidateQueries({ queryKey: ["books"] });
     },
   });

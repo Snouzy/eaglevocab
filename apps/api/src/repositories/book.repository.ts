@@ -6,18 +6,10 @@ export const bookRepository = {
       where: { id },
       include: {
         language: true,
-        decks: {
+        cards: {
           include: {
-            cards: {
-              include: {
-                card: {
-                  include: {
-                    sourceLanguage: true,
-                    targetLanguage: true,
-                  },
-                },
-              },
-            },
+            sourceLanguage: true,
+            targetLanguage: true,
           },
         },
       },
@@ -36,18 +28,10 @@ export const bookRepository = {
       take,
       include: {
         language: true,
-        decks: {
+        cards: {
           include: {
-            cards: {
-              include: {
-                card: {
-                  include: {
-                    sourceLanguage: true,
-                    targetLanguage: true,
-                  },
-                },
-              },
-            },
+            sourceLanguage: true,
+            targetLanguage: true,
           },
         },
       },
@@ -67,18 +51,10 @@ export const bookRepository = {
       },
       include: {
         language: true,
-        decks: {
+        cards: {
           include: {
-            cards: {
-              include: {
-                card: {
-                  include: {
-                    sourceLanguage: true,
-                    targetLanguage: true,
-                  },
-                },
-              },
-            },
+            sourceLanguage: true,
+            targetLanguage: true,
           },
         },
       },
@@ -91,18 +67,10 @@ export const bookRepository = {
       data,
       include: {
         language: true,
-        decks: {
+        cards: {
           include: {
-            cards: {
-              include: {
-                card: {
-                  include: {
-                    sourceLanguage: true,
-                    targetLanguage: true,
-                  },
-                },
-              },
-            },
+            sourceLanguage: true,
+            targetLanguage: true,
           },
         },
       },
@@ -112,6 +80,13 @@ export const bookRepository = {
   delete: async (id: string) => {
     return prisma.book.delete({
       where: { id },
+    });
+  },
+
+  removeCardFromBook: async (bookId: string, cardId: string) => {
+    return prisma.card.update({
+      where: { id: cardId },
+      data: { bookId: null },
     });
   },
 };

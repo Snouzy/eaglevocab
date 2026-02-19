@@ -7,6 +7,7 @@ export const cardRepository = {
       include: {
         sourceLanguage: true,
         targetLanguage: true,
+        book: true,
         decks: {
           include: { deck: true },
         },
@@ -36,6 +37,7 @@ export const cardRepository = {
       include: {
         sourceLanguage: true,
         targetLanguage: true,
+        book: true,
         decks: {
           include: { deck: true },
         },
@@ -61,16 +63,18 @@ export const cardRepository = {
     data: any,
     userId: string
   ) => {
-    const { deckId, ...cardData } = data;
+    const { deckId, bookId, ...cardData } = data;
 
     const card = await prisma.card.create({
       data: {
         ...cardData,
         userId,
+        ...(bookId && { bookId }),
       },
       include: {
         sourceLanguage: true,
         targetLanguage: true,
+        book: true,
         decks: {
           include: { deck: true },
         },
@@ -96,6 +100,7 @@ export const cardRepository = {
       include: {
         sourceLanguage: true,
         targetLanguage: true,
+        book: true,
         decks: {
           include: { deck: true },
         },

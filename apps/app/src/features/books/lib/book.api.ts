@@ -29,3 +29,9 @@ export async function deleteBook(bookId: string) {
     method: "DELETE",
   });
 }
+
+export async function removeCardFromBook(bookId: string, cardId: string) {
+  return apiClient<ApiResponse<void>>(`/api/books/${bookId}/cards/${cardId}`, {
+    method: "DELETE",
+  });
+}

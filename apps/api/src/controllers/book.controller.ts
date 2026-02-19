@@ -85,3 +85,19 @@ export const deleteBook = async (
     next(error);
   }
 };
+
+export const removeCardFromBook = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = req.user!.id;
+    const bookId = req.params.id as string;
+    const cardId = req.params.cardId as string;
+    await bookService.removeCardFromBook(userId, bookId, cardId);
+    sendSuccess(res, {}, "Card removed from book");
+  } catch (error) {
+    next(error);
+  }
+};

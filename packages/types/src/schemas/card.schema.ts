@@ -18,6 +18,7 @@ export const createCardSchema = z.object({
   sourceLanguageId: z.string().min(1),
   targetLanguageId: z.string().min(1),
   deckId: z.string().optional(),
+  bookId: z.string().optional(),
 });
 
 export type CreateCardInput = z.infer<typeof createCardSchema>;

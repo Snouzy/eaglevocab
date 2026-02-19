@@ -136,7 +136,7 @@ model Book {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  decks Deck[]
+  cards Card[]
 
   @@map("book")
 }
@@ -145,8 +145,6 @@ model Deck {
   id          String   @id @default(cuid())
   name        String
   description String?
-  bookId      String?
-  book        Book?    @relation(fields: [bookId], references: [id], onDelete: SetNull)
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
@@ -170,6 +168,8 @@ model Card {
   sourceLanguage   Language  @relation("SourceLanguage", fields: [sourceLanguageId], references: [id])
   targetLanguageId String
   targetLanguage   Language  @relation("TargetLanguage", fields: [targetLanguageId], references: [id])
+  bookId           String?
+  book             Book?     @relation(fields: [bookId], references: [id], onDelete: SetNull)
   userId           String
   user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -188,6 +188,7 @@ model Card {
   @@index([userId])
   @@index([sourceLanguageId])
   @@index([targetLanguageId])
+  @@index([bookId])
   @@map("card")
 }
 

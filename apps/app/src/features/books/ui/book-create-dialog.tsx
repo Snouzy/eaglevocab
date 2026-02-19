@@ -23,23 +23,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCreateBook } from "../hooks/use-books";
-
-const LANGUAGES = [
-  { id: "en", name: "English" },
-  { id: "fr", name: "French" },
-  { id: "es", name: "Spanish" },
-  { id: "de", name: "German" },
-  { id: "it", name: "Italian" },
-  { id: "pt", name: "Portuguese" },
-  { id: "ja", name: "Japanese" },
-  { id: "zh", name: "Chinese" },
-  { id: "ko", name: "Korean" },
-  { id: "ru", name: "Russian" },
-];
+import { useLanguages } from "@/features/cards/hooks/use-languages";
 
 export function BookCreateDialog() {
   const [open, setOpen] = useState(false);
   const createBookMutation = useCreateBook();
+  const { data: languagesData } = useLanguages();
+
+  const languages = languagesData?.data || [];
 
   const {
     register,
@@ -50,9 +41,6 @@ export function BookCreateDialog() {
     formState: { errors },
   } = useForm<CreateBookInput>({
     resolver: zodResolver(createBookSchema),
-    defaultValues: {
-      languageId: "en",
-    },
   });
 
   const languageId = watch("languageId");
@@ -111,12 +99,12 @@ export function BookCreateDialog() {
               onValueChange={(value) => setValue("languageId", value)}
             >
               <SelectTrigger id="language" className="mt-1">
-                <SelectValue />
+                <SelectValue placeholder="Select a language..." />
               </SelectTrigger>
               <SelectContent>
-                {LANGUAGES.map((lang) => (
+                {languages.map((lang: any) => (
                   <SelectItem key={lang.id} value={lang.id}>
-                    {lang.name}
+                    {lang.flag} {lang.name}
                   </SelectItem>
                 ))}
               </SelectContent>

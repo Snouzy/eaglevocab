@@ -113,3 +113,23 @@ export const deleteBook = async (userId: string, bookId: string) => {
     throw error;
   }
 };
+
+export const removeCardFromBook = async (
+  userId: string,
+  bookId: string,
+  cardId: string
+) => {
+  try {
+    const book = await bookRepository.findById(bookId);
+    if (!book) {
+      throw new AppError("BOOK_NOT_FOUND", "Book not found", 404);
+    }
+    if (book.userId !== userId) {
+      throw new AppError("UNAUTHORIZED", "You do not have permission to modify this book", 403);
+    }
+    await bookRepository.removeCardFromBook(bookId, cardId);
+  } catch (error) {
+    logger.error("Remove card from book error", error);
+    throw error;
+  }
+};
