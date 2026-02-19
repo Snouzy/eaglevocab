@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { CreateCardInput, UpdateCardInput } from "@eagle-vocab/types";
+import { CreateCardInput, UpdateCardInput, ReviewCardInput } from "@eagle-vocab/types";
 import * as cardService from "../services/card.service";
 import { sendSuccess, sendError } from "../helpers/api-response";
 import { logger } from "../helpers/logger";
@@ -82,6 +82,23 @@ export const deleteCard = async (
 
     await cardService.deleteCard(userId, id);
     sendSuccess(res, {}, "Card deleted successfully");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const reviewCard = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = req.user!.id;
+    const id = req.params.id as string;
+    const input = req.body as ReviewCardInput;
+
+    const result = await cardService.reviewCard(userId, id, input);
+    sendSuccess(res, result, "Card reviewed successfully");
   } catch (error) {
     next(error);
   }

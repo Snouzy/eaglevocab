@@ -108,4 +108,39 @@ export const cardRepository = {
       where: { id },
     });
   },
+
+  updateSrsFields: async (
+    id: string,
+    data: {
+      easeFactor: number;
+      interval: number;
+      repetitions: number;
+      nextReviewAt: Date;
+      lastReviewedAt: Date;
+    }
+  ) => {
+    return prisma.card.update({
+      where: { id },
+      data,
+      include: {
+        sourceLanguage: true,
+        targetLanguage: true,
+      },
+    });
+  },
+
+  findAllByDeckId: async (deckId: string) => {
+    return prisma.card.findMany({
+      where: {
+        decks: {
+          some: { deckId },
+        },
+      },
+      include: {
+        sourceLanguage: true,
+        targetLanguage: true,
+      },
+      orderBy: { createdAt: "asc" },
+    });
+  },
 };

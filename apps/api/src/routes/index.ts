@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import {
   createCardSchema,
   updateCardSchema,
+  reviewCardSchema,
   createDeckSchema,
   updateDeckSchema,
   addCardToDeckSchema,
@@ -45,6 +46,12 @@ router.patch(
   cardController.updateCard
 );
 router.delete("/cards/:id", authMiddleware, cardController.deleteCard);
+router.post(
+  "/cards/:id/review",
+  authMiddleware,
+  validate(reviewCardSchema),
+  cardController.reviewCard
+);
 
 router.get("/decks", authMiddleware, deckController.listDecks);
 router.get("/decks/:id", authMiddleware, deckController.getDeck);
@@ -72,6 +79,7 @@ router.delete(
   authMiddleware,
   deckController.removeCardFromDeck
 );
+router.get("/decks/:id/study-cards", authMiddleware, deckController.getStudyCards);
 
 router.get("/books", authMiddleware, bookController.listBooks);
 router.get("/books/:id", authMiddleware, bookController.getBook);

@@ -1,6 +1,7 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Sparkles, BarChart3 } from "lucide-react";
+
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:5173";
 
 export default function Home() {
   return (
@@ -15,14 +16,14 @@ export default function Home() {
             translations, and organized learning paths
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/sign-up">
+            <a href={`${appUrl}/sign-up`}>
               <Button size="lg">Get Started</Button>
-            </Link>
-            <Link href="/sign-in">
+            </a>
+            <a href={`${appUrl}/sign-in`}>
               <Button variant="outline" size="lg">
                 Sign In
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
 

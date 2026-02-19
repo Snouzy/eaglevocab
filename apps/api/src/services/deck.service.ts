@@ -184,3 +184,27 @@ export const removeCardFromDeck = async (
     throw error;
   }
 };
+
+export const getStudyCards = async (userId: string, deckId: string) => {
+  try {
+    const deck = await deckRepository.findById(deckId);
+
+    if (!deck) {
+      throw new AppError("DECK_NOT_FOUND", "Deck not found", 404);
+    }
+
+    if (deck.userId !== userId) {
+      throw new AppError(
+        "UNAUTHORIZED",
+        "You do not have permission to access this deck",
+        403
+      );
+    }
+
+    const cards = await cardRepository.findAllByDeckId(deckId);
+    return { cards, deckName: deck.name };
+  } catch (error) {
+    logger.error("Get study cards error", error);
+    throw error;
+  }
+};

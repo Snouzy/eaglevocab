@@ -11,8 +11,12 @@ import { logger } from "./helpers/logger";
 
 const app: any = express();
 
+const allowedOrigins = [env.WEB_URL, env.APP_URL];
 app.use((_req: any, res: any, next: any) => {
-  res.header("Access-Control-Allow-Origin", env.WEB_URL);
+  const origin = _req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");

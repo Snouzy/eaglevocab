@@ -119,3 +119,19 @@ export const removeCardFromDeck = async (
     next(error);
   }
 };
+
+export const getStudyCards = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = req.user!.id;
+    const id = req.params.id as string;
+
+    const result = await deckService.getStudyCards(userId, id);
+    sendSuccess(res, result);
+  } catch (error) {
+    next(error);
+  }
+};

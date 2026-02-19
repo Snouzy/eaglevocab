@@ -3,4 +3,5 @@ export * from "./schemas/card.schema";
 export * from "./schemas/deck.schema";
 export * from "./schemas/book.schema";
 export * from "./schemas/settings.schema";
+export * from "./schemas/review.schema";
 export * from "./api-response";

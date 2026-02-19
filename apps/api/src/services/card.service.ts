@@ -1,8 +1,9 @@
-import { CreateCardInput, UpdateCardInput } from "@eagle-vocab/types";
+import { CreateCardInput, UpdateCardInput, ReviewCardInput } from "@eagle-vocab/types";
 import { cardRepository } from "../repositories/card.repository";
 import { deckRepository } from "../repositories/deck.repository";
 import { AppError } from "../middlewares/error.middleware";
 import { logger } from "../helpers/logger";
+import { calculateNextReview } from "./srs.service";
 
 export const getCards = async (
   userId: string,
@@ -113,6 +114,54 @@ export const deleteCard = async (userId: string, cardId: string) => {
     await cardRepository.delete(cardId);
   } catch (error) {
     logger.error("Delete card error", error);
+    throw error;
+  }
+};
+
+export const reviewCard = async (
+  userId: string,
+  cardId: string,
+  input: ReviewCardInput
+) => {
+  try {
+    const card = await cardRepository.findById(cardId);
+
+    if (!card) {
+      throw new AppError("CARD_NOT_FOUND", "Card not found", 404);
+    }
+
+    if (card.userId !== userId) {
+      throw new AppError(
+        "UNAUTHORIZED",
+        "You do not have permission to review this card",
+        403
+      );
+    }
+
+    const srsResult = calculateNextReview(
+      {
+        easeFactor: card.easeFactor,
+        interval: card.interval,
+        repetitions: card.repetitions,
+      },
+      input.quality
+    );
+
+    const updatedCard = await cardRepository.updateSrsFields(cardId, {
+      ...srsResult,
+      lastReviewedAt: new Date(),
+    });
+
+    return {
+      cardId: updatedCard.id,
+      easeFactor: updatedCard.easeFactor,
+      interval: updatedCard.interval,
+      repetitions: updatedCard.repetitions,
+      nextReviewAt: updatedCard.nextReviewAt,
+      lastReviewedAt: updatedCard.lastReviewedAt,
+    };
+  } catch (error) {
+    logger.error("Review card error", error);
     throw error;
   }
 };
