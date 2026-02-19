@@ -1,3 +1,5 @@
+import { motion } from "motion/react";
+
 interface StudyProgressProps {
   current: number;
   total: number;
@@ -13,9 +15,11 @@ export function StudyProgress({ current, total }: StudyProgressProps) {
         <span>{Math.round(percentage)}%</span>
       </div>
       <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-        <div
-          className="h-full bg-primary rounded-full transition-all duration-500"
-          style={{ width: `${percentage}%` }}
+        <motion.div
+          className="h-full bg-primary rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${percentage}%` }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         />
       </div>
     </div>

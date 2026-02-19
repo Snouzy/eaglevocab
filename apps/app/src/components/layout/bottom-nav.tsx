@@ -1,5 +1,6 @@
 import { useLocation } from "react-router";
 import { Link } from "react-router";
+import { motion } from "motion/react";
 import { BookOpen, Home, Layers, Plus, Settings } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
@@ -28,12 +29,19 @@ export function BottomNav() {
               key={link.href}
               to={link.href}
               className={cn(
-                "flex flex-col items-center justify-center gap-0.5 min-w-[3.5rem] py-1 rounded-lg transition-colors",
+                "relative flex flex-col items-center justify-center gap-0.5 min-w-[3.5rem] py-1 rounded-lg transition-colors",
                 isActive
                   ? "text-primary"
                   : "text-muted-foreground active:text-foreground"
               )}
             >
+              {isActive && (
+                <motion.div
+                  layoutId="bottomNavIndicator"
+                  className="absolute -top-1 w-5 h-0.5 bg-primary rounded-full"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
               <Icon className={cn("h-5 w-5", isActive && "stroke-[2.5]")} />
               <span className="text-[10px] font-medium leading-tight">
                 {link.label}

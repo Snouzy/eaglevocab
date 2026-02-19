@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useHotkeys } from "react-hotkeys-hook";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { X } from "lucide-react";
@@ -133,26 +134,52 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
 
       {/* Card — takes all remaining space */}
       <div className="flex-1 min-h-0 flex items-center justify-center px-4 py-4">
-        <StudyCardComponent
-          card={currentCard}
-          isFlipped={session.isFlipped}
-          mode={session.mode}
-          onFlip={handleFlip}
-        />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={session.currentIndex}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="w-full flex items-center justify-center"
+          >
+            <StudyCardComponent
+              card={currentCard}
+              isFlipped={session.isFlipped}
+              mode={session.mode}
+              onFlip={handleFlip}
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Bottom actions */}
       <div className="shrink-0 px-4 pb-[env(safe-area-inset-bottom,8px)] pb-4">
-        {!session.isFlipped ? (
-          <button
-            onClick={handleFlip}
-            className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-semibold text-lg active:scale-[0.98] transition-transform"
-          >
-            Tap to flip
-          </button>
-        ) : (
-          <AnswerButtons onAnswer={handleAnswer} disabled={false} />
-        )}
+        <AnimatePresence mode="wait">
+          {!session.isFlipped ? (
+            <motion.button
+              key="flip"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.15 }}
+              onClick={handleFlip}
+              className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-semibold text-lg active:scale-[0.98] transition-transform"
+            >
+              Tap to flip
+            </motion.button>
+          ) : (
+            <motion.div
+              key="answers"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.15 }}
+            >
+              <AnswerButtons onAnswer={handleAnswer} disabled={false} />
+            </motion.div>
+          )}
+        </AnimatePresence>
         <p className="text-center text-xs text-muted-foreground mt-2 hidden sm:block">
           {!session.isFlipped
             ? "Press Space to flip"

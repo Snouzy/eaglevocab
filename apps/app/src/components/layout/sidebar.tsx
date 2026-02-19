@@ -1,5 +1,6 @@
 import { useLocation } from "react-router";
 import { Link } from "react-router";
+import { motion } from "motion/react";
 import { BookOpen, Home, Layers, Plus, Settings } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
@@ -39,14 +40,21 @@ export function Sidebar() {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg mx-3 transition-colors",
+                  "relative flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg mx-3 transition-colors",
                   isActive
-                    ? "bg-sidebar-active-bg text-sidebar-active border-l-[3px] border-sidebar-active"
+                    ? "text-sidebar-active"
                     : "text-sidebar-muted hover:text-sidebar-foreground hover:bg-muted"
                 )}
               >
-                <Icon className="h-5 w-5" />
-                {link.label}
+                {isActive && (
+                  <motion.div
+                    layoutId="sidebarActiveIndicator"
+                    className="absolute inset-0 bg-sidebar-active-bg rounded-lg border-l-[3px] border-sidebar-active"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <Icon className="h-5 w-5 relative z-10" />
+                <span className="relative z-10">{link.label}</span>
               </Link>
             );
           })}

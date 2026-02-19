@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCardSchema, type CreateCardInput } from "@eagle-vocab/types";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,8 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { useTranslate } from "../hooks/use-translate";
 import { useCreateCard } from "../hooks/use-create-card";
@@ -249,67 +249,95 @@ export function CardCreateForm() {
             disabled={isTranslating}
             className="w-full"
           >
-            {isTranslating ? "Translating..." : "Translate"}
+            {isTranslating ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Translating...
+              </>
+            ) : (
+              "Translate"
+            )}
           </Button>
 
-          {isTranslating && (
-            <div className="space-y-3">
-              <Skeleton className="h-10" />
-              <Skeleton className="h-10" />
-              <Skeleton className="h-10" />
-            </div>
-          )}
+          <AnimatePresence mode="wait">
+            {isTranslating && (
+              <motion.div
+                key="skeleton"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-3"
+              >
+                <div className="h-10 bg-muted rounded animate-pulse" />
+                <div className="h-10 bg-muted rounded animate-pulse" />
+                <div className="h-10 bg-muted rounded animate-pulse" />
+              </motion.div>
+            )}
 
-          {translationResult && !isTranslating && (
-            <div className="space-y-4 p-3 bg-muted rounded">
-              {includeTranslation && translationResult.translation && (
-                <div>
-                  <Label htmlFor="translation">Translation</Label>
-                  <Input
-                    id="translation"
-                    placeholder="Translation"
-                    {...register("translation")}
-                    className="mt-1"
-                  />
-                </div>
-              )}
-              {includePronunciation && translationResult.pronunciation && (
-                <div>
-                  <Label htmlFor="pronunciation">Pronunciation</Label>
-                  <Input
-                    id="pronunciation"
-                    placeholder="Pronunciation"
-                    {...register("pronunciation")}
-                    className="mt-1"
-                  />
-                </div>
-              )}
-              {includeDefinition && translationResult.definition && (
-                <div>
-                  <Label htmlFor="definition">Definition</Label>
-                  <Input
-                    id="definition"
-                    placeholder="Definition"
-                    {...register("definition")}
-                    className="mt-1"
-                  />
-                </div>
-              )}
-              {includeExamples && translationResult.examples && translationResult.examples.length > 0 && (
-                <div>
-                  <Label>Examples</Label>
-                  <div className="mt-1 space-y-2">
-                    {translationResult.examples.map((ex, i) => (
-                      <div key={i} className="p-2 bg-background border rounded text-sm">
-                        <p>{ex.sentence}</p>
-                        <p className="text-muted-foreground">{ex.translation}</p>
-                      </div>
-                    ))}
+            {translationResult && !isTranslating && (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-4 p-3 bg-muted rounded"
+              >
+                {includeTranslation && translationResult.translation && (
+                  <div>
+                    <Label htmlFor="translation">Translation</Label>
+                    <Input
+                      id="translation"
+                      placeholder="Translation"
+                      {...register("translation")}
+                      className="mt-1"
+                    />
                   </div>
-                </div>
-              )}
-            </div>
-          )}
+                )}
+                {includePronunciation && translationResult.pronunciation && (
+                  <div>
+                    <Label htmlFor="pronunciation">Pronunciation</Label>
+                    <Input
+                      id="pronunciation"
+                      placeholder="Pronunciation"
+                      {...register("pronunciation")}
+                      className="mt-1"
+                    />
+                  </div>
+                )}
+                {includeDefinition && translationResult.definition && (
+                  <div>
+                    <Label htmlFor="definition">Definition</Label>
+                    <Input
+                      id="definition"
+                      placeholder="Definition"
+                      {...register("definition")}
+                      className="mt-1"
+                    />
+                  </div>
+                )}
+                {includeExamples && translationResult.examples && translationResult.examples.length > 0 && (
+                  <div>
+                    <Label>Examples</Label>
+                    <div className="mt-1 space-y-2">
+                      {translationResult.examples.map((ex, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.08 }}
+                          className="p-2 bg-background border rounded text-sm"
+                        >
+                          <p>{ex.sentence}</p>
+                          <p className="text-muted-foreground">{ex.translation}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {decks.length > 0 && (
             <div>
@@ -335,7 +363,14 @@ export function CardCreateForm() {
             disabled={createCardMutation.isPending}
             className="w-full"
           >
-            {createCardMutation.isPending ? "Saving..." : "Save Card"}
+            {createCardMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Card"
+            )}
           </Button>
         </form>
   );
