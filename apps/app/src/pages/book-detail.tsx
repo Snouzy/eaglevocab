@@ -35,7 +35,7 @@ export function BookDetailPage() {
             </>
           ) : (
             <>
-              <h1 className="text-3xl font-bold tracking-tight">{book?.title}</h1>
+              <h1 className="text-2xl font-bold tracking-tight">{book?.title}</h1>
               {book?.author && (
                 <p className="text-muted-foreground">by {book.author}</p>
               )}
@@ -44,7 +44,7 @@ export function BookDetailPage() {
         </div>
       </div>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
           <CardTitle>Decks in this book</CardTitle>
           <CardDescription>{decks.length} decks total</CardDescription>
@@ -64,7 +64,7 @@ export function BookDetailPage() {
                 <ReactRouterLink
                   key={deck.id}
                   to={`/decks/${deck.id}`}
-                  className="block p-3 border border-border rounded-lg hover:bg-accent transition-colors"
+                  className="block p-3 border border-border rounded-lg hover:bg-muted transition-colors"
                 >
                   <p className="font-medium">{deck.name}</p>
                   {deck.description && (

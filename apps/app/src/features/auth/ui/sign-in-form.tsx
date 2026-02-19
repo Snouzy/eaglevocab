@@ -46,7 +46,7 @@ export function SignInForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md shadow-lg">
       <CardHeader>
         <CardTitle>Sign In</CardTitle>
         <CardDescription>

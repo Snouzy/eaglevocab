@@ -27,7 +27,7 @@ export function BookList() {
 
   if (isLoading) {
     return (
-      <div className="grid gap-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-24" />
         ))}
@@ -50,9 +50,9 @@ export function BookList() {
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {books.map((book: any) => (
-        <Card key={book.id}>
+        <Card key={book.id} className="shadow-sm">
           <CardHeader>
             <div className="flex items-start justify-between">
               <div>

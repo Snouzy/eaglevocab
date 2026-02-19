@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { LogOut } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,11 @@ import { Button } from "@/components/ui/button";
 import { authClient, useSession } from "@/features/auth/lib/auth-client";
 import { toast } from "sonner";
 
-export function Topbar() {
+interface TopbarProps {
+  onMenuClick: () => void;
+}
+
+export function Topbar({ onMenuClick }: TopbarProps) {
   const navigate = useNavigate();
   const { data: session } = useSession();
 
@@ -27,11 +31,22 @@ export function Topbar() {
   }
 
   return (
-    <div className="h-14 border-b border-border flex items-center justify-between px-6">
-      <h1 className="text-lg font-semibold">EagleVocab</h1>
+    <div className="h-16 bg-card shadow-sm flex items-center justify-between px-6">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="lg:hidden"
+        onClick={onMenuClick}
+      >
+        <Menu className="h-5 w-5" />
+      </Button>
+      <div className="lg:flex-1" />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Button
+            variant="ghost"
+            className="relative h-9 w-9 rounded-full bg-primary text-primary-foreground text-sm font-medium"
+          >
             {session?.user?.name?.[0]?.toUpperCase() || "U"}
           </Button>
         </DropdownMenuTrigger>

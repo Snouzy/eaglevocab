@@ -99,14 +99,14 @@ export function DeckDetailPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <ReactRouterLink to="/decks">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
         </ReactRouterLink>
-        <div>
+        <div className="flex-1 min-w-0">
           {deckLoading ? (
             <>
               <Skeleton className="h-8 w-32 mb-1" />
@@ -122,11 +122,11 @@ export function DeckDetailPage() {
                   onChange={(e) => setEditName(e.target.value)}
                   onBlur={handleNameSave}
                   onKeyDown={handleNameKeyDown}
-                  className="text-3xl font-bold tracking-tight mb-1"
+                  className="text-2xl font-bold tracking-tight mb-1"
                 />
               ) : (
                 <h1
-                  className="text-3xl font-bold tracking-tight cursor-pointer hover:underline hover:decoration-dashed"
+                  className="text-2xl font-bold tracking-tight cursor-pointer hover:underline hover:decoration-dashed"
                   onClick={handleNameEdit}
                 >
                   {deck?.name}
@@ -153,7 +153,7 @@ export function DeckDetailPage() {
             </>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
           <ReactRouterLink to={`/study/${deckId}?mode=normal`}>
             <Button disabled={cards.length === 0}>
               <GraduationCap className="mr-2 h-4 w-4" />
@@ -169,7 +169,7 @@ export function DeckDetailPage() {
         </div>
       </div>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Cards in this deck</CardTitle>
@@ -194,7 +194,7 @@ export function DeckDetailPage() {
               {cards.map((card: any) => (
                 <div
                   key={card.id}
-                  className="flex justify-between items-center p-3 border border-border rounded-lg"
+                  className="flex justify-between items-center p-3 border border-border rounded-lg hover:bg-muted transition-colors"
                 >
                   <div>
                     <p className="font-medium">{card.word}</p>
