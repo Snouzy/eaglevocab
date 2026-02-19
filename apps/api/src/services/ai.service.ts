@@ -70,7 +70,7 @@ export const translateWord = async (
   }
   if (includeExamples) {
     requestFields.push(
-      `examples: an array of 2-3 example sentences with the word in ${targetLanguageName}, each with sentence and translation fields`
+      `examples: an array of 2-3 example sentences using the word in ${sourceLanguageName} (sentence field), each with its translation in ${targetLanguageName} (translation field)`
     );
   }
 

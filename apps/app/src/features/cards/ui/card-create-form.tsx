@@ -1,15 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCardSchema, type CreateCardInput } from "@eagle-vocab/types";
 import { toast } from "sonner";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,10 +15,13 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/shared/lib/utils";
 import { useTranslate } from "../hooks/use-translate";
 import { useCreateCard } from "../hooks/use-create-card";
 import { useLanguages } from "../hooks/use-languages";
 import { useDecks } from "@/features/decks/hooks/use-decks";
+import { useSettings } from "@/features/settings/hooks/use-settings";
 
 interface TranslationResult {
   translation: string | null;
@@ -42,11 +38,13 @@ export function CardCreateForm() {
   const [includePronunciation, setIncludePronunciation] = useState(true);
   const [includeDefinition, setIncludeDefinition] = useState(true);
   const [includeExamples, setIncludeExamples] = useState(true);
+  const [optionsOpen, setOptionsOpen] = useState(false);
 
   const translateMutation = useTranslate();
   const createCardMutation = useCreateCard();
   const { data: languagesData } = useLanguages();
   const { data: decksData } = useDecks();
+  const { data: settingsData } = useSettings();
 
   const languages = languagesData?.data || [];
 
@@ -63,6 +61,12 @@ export function CardCreateForm() {
   const word = watch("word");
   const sourceLanguageId = watch("sourceLanguageId");
   const targetLanguageId = watch("targetLanguageId");
+
+  useEffect(() => {
+    if (settingsData?.data?.nativeLanguageId && !targetLanguageId) {
+      setValue("targetLanguageId", settingsData.data.nativeLanguageId);
+    }
+  }, [settingsData, targetLanguageId, setValue]);
 
   async function handleTranslate() {
     if (!word) {
@@ -116,14 +120,6 @@ export function CardCreateForm() {
   const decks = decksData?.data?.decks || [];
 
   return (
-    <Card className="w-full max-w-2xl shadow-sm">
-      <CardHeader>
-        <CardTitle>Create New Card</CardTitle>
-        <CardDescription>
-          Add a new vocabulary card with AI-powered translations
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -179,48 +175,69 @@ export function CardCreateForm() {
             )}
           </div>
 
-          <div className="space-y-3 p-3 bg-muted rounded">
-            <Label className="text-base font-semibold">Translation Options</Label>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="includeTranslation" className="font-normal">
-                  Translation
-                </Label>
-                <Switch
-                  id="includeTranslation"
-                  checked={includeTranslation}
-                  onCheckedChange={setIncludeTranslation}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="includePronunciation" className="font-normal">
-                  Pronunciation
-                </Label>
-                <Switch
-                  id="includePronunciation"
-                  checked={includePronunciation}
-                  onCheckedChange={setIncludePronunciation}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="includeDefinition" className="font-normal">
-                  Definition
-                </Label>
-                <Switch
-                  id="includeDefinition"
-                  checked={includeDefinition}
-                  onCheckedChange={setIncludeDefinition}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="includeExamples" className="font-normal">
-                  Examples
-                </Label>
-                <Switch
-                  id="includeExamples"
-                  checked={includeExamples}
-                  onCheckedChange={setIncludeExamples}
-                />
+          <div>
+            <button
+              type="button"
+              onClick={() => setOptionsOpen(!optionsOpen)}
+              className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ChevronDown
+                className={cn(
+                  "h-4 w-4 transition-transform duration-200",
+                  optionsOpen && "rotate-180"
+                )}
+              />
+              Translation Options
+            </button>
+            <div
+              className={cn(
+                "grid transition-[grid-template-rows] duration-200",
+                optionsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+              )}
+            >
+              <div className="overflow-hidden">
+                <div className="space-y-2 pt-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="includeTranslation" className="font-normal">
+                      Translation
+                    </Label>
+                    <Switch
+                      id="includeTranslation"
+                      checked={includeTranslation}
+                      onCheckedChange={setIncludeTranslation}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="includePronunciation" className="font-normal">
+                      Pronunciation
+                    </Label>
+                    <Switch
+                      id="includePronunciation"
+                      checked={includePronunciation}
+                      onCheckedChange={setIncludePronunciation}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="includeDefinition" className="font-normal">
+                      Definition
+                    </Label>
+                    <Switch
+                      id="includeDefinition"
+                      checked={includeDefinition}
+                      onCheckedChange={setIncludeDefinition}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="includeExamples" className="font-normal">
+                      Examples
+                    </Label>
+                    <Switch
+                      id="includeExamples"
+                      checked={includeExamples}
+                      onCheckedChange={setIncludeExamples}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -321,7 +338,5 @@ export function CardCreateForm() {
             {createCardMutation.isPending ? "Saving..." : "Save Card"}
           </Button>
         </form>
-      </CardContent>
-    </Card>
   );
 }

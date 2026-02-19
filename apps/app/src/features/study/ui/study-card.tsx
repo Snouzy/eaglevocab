@@ -1,4 +1,3 @@
-import { cn } from "@/shared/lib/utils";
 import type { StudyCard, StudyMode } from "../lib/study-session";
 
 interface StudyCardProps {
@@ -9,84 +8,68 @@ interface StudyCardProps {
 }
 
 export function StudyCardComponent({ card, isFlipped, mode, onFlip }: StudyCardProps) {
-  const frontContent = mode === "normal" ? (
-    <div className="text-center space-y-4">
-      <p className="text-4xl font-bold">{card.word}</p>
-      {card.pronunciation && (
-        <p className="text-xl text-muted-foreground">{card.pronunciation}</p>
-      )}
-      <p className="text-sm text-muted-foreground mt-8">
-        {card.sourceLanguage.flag} {card.sourceLanguage.name}
-      </p>
-    </div>
-  ) : (
-    <div className="text-center space-y-4">
-      <p className="text-4xl font-bold">{card.translation || "—"}</p>
-      <p className="text-sm text-muted-foreground mt-8">
-        {card.targetLanguage.flag} {card.targetLanguage.name}
-      </p>
-    </div>
-  );
-
-  const backContent = mode === "normal" ? (
-    <div className="text-center space-y-6 w-full">
-      <p className="text-3xl font-bold">{card.translation || "—"}</p>
-      {card.definition && (
-        <p className="text-lg text-muted-foreground">{card.definition}</p>
-      )}
-      {card.examples && card.examples.length > 0 && (
-        <div className="space-y-3 text-left">
-          {card.examples.map((ex: any, i: number) => (
-            <div key={i} className="p-3 bg-muted rounded-lg text-sm">
-              <p className="font-medium">{ex.sentence}</p>
-              <p className="text-muted-foreground">{ex.translation}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  ) : (
-    <div className="text-center space-y-6 w-full">
-      <p className="text-3xl font-bold">{card.word}</p>
-      {card.pronunciation && (
-        <p className="text-xl text-muted-foreground">{card.pronunciation}</p>
-      )}
-      {card.definition && (
-        <p className="text-lg text-muted-foreground">{card.definition}</p>
-      )}
-      {card.examples && card.examples.length > 0 && (
-        <div className="space-y-3 text-left">
-          {card.examples.map((ex: any, i: number) => (
-            <div key={i} className="p-3 bg-muted rounded-lg text-sm">
-              <p className="font-medium">{ex.sentence}</p>
-              <p className="text-muted-foreground">{ex.translation}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-
-  return (
-    <div className="perspective-1000 w-full max-w-2xl mx-auto cursor-pointer" onClick={() => !isFlipped && onFlip()}>
+  if (!isFlipped) {
+    return (
       <div
-        className={cn(
-          "relative w-full min-h-[400px] transition-transform duration-500 transform-style-preserve-3d",
-          isFlipped && "rotate-y-180"
-        )}
+        onClick={onFlip}
+        className="w-full max-w-lg cursor-pointer select-none"
       >
-        <div className="absolute inset-0 backface-hidden rounded-2xl border-2 border-border bg-card p-8 flex flex-col items-center justify-center shadow-xl">
-          {frontContent}
-          {!isFlipped && (
-            <p className="absolute bottom-6 text-sm text-muted-foreground animate-pulse">
-              Press Space or click to flip
-            </p>
+        <div className="rounded-2xl border-2 border-border bg-card p-6 shadow-lg flex flex-col items-center justify-center min-h-[200px]">
+          {mode === "normal" ? (
+            <div className="text-center space-y-3">
+              <p className="text-3xl sm:text-4xl font-bold">{card.word}</p>
+              {card.pronunciation && (
+                <p className="text-lg text-muted-foreground">{card.pronunciation}</p>
+              )}
+              <p className="text-xs text-muted-foreground pt-2">
+                {card.sourceLanguage.flag} {card.sourceLanguage.name}
+              </p>
+            </div>
+          ) : (
+            <div className="text-center space-y-3">
+              <p className="text-3xl sm:text-4xl font-bold">{card.translation || "—"}</p>
+              <p className="text-xs text-muted-foreground pt-2">
+                {card.targetLanguage.flag} {card.targetLanguage.name}
+              </p>
+            </div>
           )}
         </div>
+      </div>
+    );
+  }
 
-        <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl border-2 border-border bg-card p-8 flex flex-col items-center justify-center shadow-xl overflow-y-auto">
-          {backContent}
-        </div>
+  return (
+    <div className="w-full max-w-lg overflow-y-auto">
+      <div className="rounded-2xl border-2 border-primary/30 bg-card p-6 shadow-lg space-y-4">
+        {mode === "normal" ? (
+          <>
+            <p className="text-2xl sm:text-3xl font-bold text-center">{card.translation || "—"}</p>
+            {card.definition && (
+              <p className="text-base text-muted-foreground text-center">{card.definition}</p>
+            )}
+          </>
+        ) : (
+          <>
+            <p className="text-2xl sm:text-3xl font-bold text-center">{card.word}</p>
+            {card.pronunciation && (
+              <p className="text-base text-muted-foreground text-center">{card.pronunciation}</p>
+            )}
+            {card.definition && (
+              <p className="text-sm text-muted-foreground text-center">{card.definition}</p>
+            )}
+          </>
+        )}
+
+        {card.examples && card.examples.length > 0 && (
+          <div className="space-y-2 pt-2 border-t border-border">
+            {card.examples.map((ex: any, i: number) => (
+              <div key={i} className="p-2.5 bg-muted rounded-lg text-sm">
+                <p className="font-medium">{ex.sentence}</p>
+                <p className="text-muted-foreground">{ex.translation}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

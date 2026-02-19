@@ -2,13 +2,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateSettingsSchema, type UpdateSettingsInput } from "@eagle-vocab/types";
 import { toast } from "sonner";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -79,12 +72,6 @@ export function SettingsForm() {
   }
 
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle>Settings</CardTitle>
-        <CardDescription>Manage your preferences</CardDescription>
-      </CardHeader>
-      <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <Label htmlFor="nativeLanguage">Native Language</Label>
@@ -157,13 +144,12 @@ export function SettingsForm() {
 
           <Button
             type="submit"
+            variant="success"
             disabled={!isDirty || updateSettingsMutation.isPending}
             className="w-full"
           >
             {updateSettingsMutation.isPending ? "Saving..." : "Save Settings"}
           </Button>
         </form>
-      </CardContent>
-    </Card>
   );
 }

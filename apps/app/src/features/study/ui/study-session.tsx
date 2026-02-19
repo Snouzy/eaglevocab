@@ -70,18 +70,18 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-6 p-8">
+      <div className="flex flex-col items-center justify-center h-dvh gap-6 p-6">
         <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-[400px] w-full max-w-2xl rounded-2xl" />
-        <Skeleton className="h-12 w-96" />
+        <Skeleton className="h-64 w-full max-w-lg rounded-2xl" />
+        <Skeleton className="h-12 w-full max-w-sm" />
       </div>
     );
   }
 
   if (!cards || cards.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-6 p-8">
-        <h1 className="text-3xl font-bold">No cards to study</h1>
+      <div className="flex flex-col items-center justify-center h-dvh gap-4 p-6">
+        <h1 className="text-2xl font-bold">No cards to study</h1>
         <p className="text-muted-foreground">Add some cards to this deck first.</p>
         <Button onClick={handleExit}>Back to Deck</Button>
       </div>
@@ -104,52 +104,62 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
   const currentCard = session.cards[session.currentIndex]!;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-8 p-8 relative">
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={handleExit}
-        className="absolute top-6 right-6 text-muted-foreground hover:text-foreground"
-      >
-        <X className="h-5 w-5" />
-        <span className="ml-1 text-xs">ESC</span>
-      </Button>
-
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-muted-foreground">
-          {mode === "normal" ? "Normal Mode" : "Reverse Mode"}
-        </h2>
-        <p className="text-sm text-muted-foreground">{deckName}</p>
+    <div className="flex flex-col h-dvh bg-background">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 shrink-0">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold truncate">
+            {mode === "normal" ? "Normal" : "Reverse"} — {deckName}
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleExit}
+          className="shrink-0 text-muted-foreground hover:text-foreground"
+        >
+          <X className="h-5 w-5" />
+          <span className="ml-1 text-xs hidden sm:inline">ESC</span>
+        </Button>
       </div>
 
-      <StudyProgress
-        current={session.currentIndex}
-        total={session.cards.length}
-      />
+      {/* Progress */}
+      <div className="px-4 shrink-0">
+        <StudyProgress
+          current={session.currentIndex}
+          total={session.cards.length}
+        />
+      </div>
 
-      <StudyCardComponent
-        card={currentCard}
-        isFlipped={session.isFlipped}
-        mode={session.mode}
-        onFlip={handleFlip}
-      />
+      {/* Card — takes all remaining space */}
+      <div className="flex-1 min-h-0 flex items-center justify-center px-4 py-4">
+        <StudyCardComponent
+          card={currentCard}
+          isFlipped={session.isFlipped}
+          mode={session.mode}
+          onFlip={handleFlip}
+        />
+      </div>
 
-      <AnswerButtons
-        onAnswer={handleAnswer}
-        disabled={!session.isFlipped}
-      />
-
-      {!session.isFlipped && (
-        <p className="text-sm text-muted-foreground">
-          Press <kbd className="px-2 py-1 bg-muted rounded border border-border text-xs font-mono">Space</kbd> to flip
+      {/* Bottom actions */}
+      <div className="shrink-0 px-4 pb-[env(safe-area-inset-bottom,8px)] pb-4">
+        {!session.isFlipped ? (
+          <button
+            onClick={handleFlip}
+            className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-semibold text-lg active:scale-[0.98] transition-transform"
+          >
+            Tap to flip
+          </button>
+        ) : (
+          <AnswerButtons onAnswer={handleAnswer} disabled={false} />
+        )}
+        <p className="text-center text-xs text-muted-foreground mt-2 hidden sm:block">
+          {!session.isFlipped
+            ? "Press Space to flip"
+            : "Press 1-4 to rate"
+          }
         </p>
-      )}
-
-      {session.isFlipped && (
-        <p className="text-sm text-muted-foreground">
-          Press <kbd className="px-2 py-1 bg-muted rounded border border-border text-xs font-mono">1</kbd>-<kbd className="px-2 py-1 bg-muted rounded border border-border text-xs font-mono">4</kbd> to rate
-        </p>
-      )}
+      </div>
     </div>
   );
 }
