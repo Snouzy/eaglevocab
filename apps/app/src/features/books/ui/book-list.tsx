@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useBooks, useDeleteBook } from "../hooks/use-books";
 import { toast } from "sonner";
 import { Eye, Trash2 } from "lucide-react";
@@ -16,9 +17,14 @@ import { Eye, Trash2 } from "lucide-react";
 export function BookList() {
   const { data: booksData, isLoading } = useBooks();
   const deleteBookMutation = useDeleteBook();
+  const { confirm, confirmDialog } = useConfirm({
+    title: "Delete this book?",
+    description: "All decks and cards linked to this book will be permanently deleted.",
+    confirmLabel: "Delete",
+  });
 
   const handleDelete = async (bookId: string) => {
-    if (!confirm("Are you sure?")) return;
+    if (!(await confirm())) return;
     try {
       await deleteBookMutation.mutateAsync(bookId);
       toast.success("Book deleted");
@@ -52,6 +58,8 @@ export function BookList() {
   }
 
   return (
+    <>
+    {confirmDialog}
     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {books.map((book: any, i: number) => (
         <motion.div
@@ -93,5 +101,6 @@ export function BookList() {
         </motion.div>
       ))}
     </div>
+    </>
   );
 }

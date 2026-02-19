@@ -7,9 +7,10 @@ import {
 } from "@eagle-vocab/types";
 import { ApiResponse } from "@eagle-vocab/types";
 
-export async function getCards(deckId?: string) {
+export async function getCards(deckId?: string, take?: number) {
   const params = new URLSearchParams();
   if (deckId) params.append("deckId", deckId);
+  if (take) params.append("take", String(take));
   return apiClient<ApiResponse<any>>(
     `/api/cards${params.toString() ? `?${params}` : ""}`
   );

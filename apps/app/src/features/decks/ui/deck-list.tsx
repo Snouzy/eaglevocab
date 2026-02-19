@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useDecks, useDeleteDeck } from "../hooks/use-decks";
 import { toast } from "sonner";
 import { Eye, Trash2 } from "lucide-react";
@@ -16,9 +17,14 @@ import { Eye, Trash2 } from "lucide-react";
 export function DeckList() {
   const { data: decksData, isLoading } = useDecks();
   const deleteDeckMutation = useDeleteDeck();
+  const { confirm, confirmDialog } = useConfirm({
+    title: "Delete this deck?",
+    description: "All cards in this deck will be permanently deleted.",
+    confirmLabel: "Delete",
+  });
 
   const handleDelete = async (deckId: string) => {
-    if (!confirm("Are you sure?")) return;
+    if (!(await confirm())) return;
     try {
       await deleteDeckMutation.mutateAsync(deckId);
       toast.success("Deck deleted");
@@ -52,6 +58,8 @@ export function DeckList() {
   }
 
   return (
+    <>
+    {confirmDialog}
     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {decks.map((deck: any, i: number) => (
         <motion.div
@@ -93,5 +101,6 @@ export function DeckList() {
         </motion.div>
       ))}
     </div>
+    </>
   );
 }

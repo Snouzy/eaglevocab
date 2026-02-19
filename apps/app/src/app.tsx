@@ -10,6 +10,7 @@ import { DecksPage } from "@/pages/decks";
 import { DeckDetailPage } from "@/pages/deck-detail";
 import { BooksPage } from "@/pages/books";
 import { BookDetailPage } from "@/pages/book-detail";
+import { CardsPage } from "@/pages/cards";
 import { NewCardPage } from "@/pages/new-card";
 import { SettingsPage } from "@/pages/settings";
 import { StudyPage } from "@/pages/study";
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
       { path: "/decks/:deckId", element: <DeckDetailPage /> },
       { path: "/books", element: <BooksPage /> },
       { path: "/books/:bookId", element: <BookDetailPage /> },
+      { path: "/cards", element: <CardsPage /> },
       { path: "/cards/new", element: <NewCardPage /> },
       { path: "/settings", element: <SettingsPage /> },
     ],

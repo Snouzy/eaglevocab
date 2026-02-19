@@ -1,16 +1,29 @@
 import { useLocation } from "react-router";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { BookOpen, Home, Layers, Plus, Settings } from "lucide-react";
+import { BookOpen, CreditCard, Home, Layers, Plus, Settings } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
 const links = [
   { href: "/dashboard", icon: Home, label: "Dashboard" },
   { href: "/decks", icon: Layers, label: "My Decks" },
+  { href: "/cards", icon: CreditCard, label: "My Cards" },
   { href: "/books", icon: BookOpen, label: "My Books" },
   { href: "/cards/new", icon: Plus, label: "New Card" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];
+
+function getIsActive(pathname: string, href: string) {
+  if (pathname === href) return true;
+  if (!pathname.startsWith(href + "/")) return false;
+  const moreSpecific = links.some(
+    (other) =>
+      other.href !== href &&
+      other.href.startsWith(href + "/") &&
+      (pathname === other.href || pathname.startsWith(other.href + "/"))
+  );
+  return !moreSpecific;
+}
 
 export function Sidebar() {
   const location = useLocation();
@@ -31,9 +44,7 @@ export function Sidebar() {
         <div className="space-y-1">
           {links.map((link) => {
             const Icon = link.icon;
-            const isActive =
-              location.pathname === link.href ||
-              location.pathname.startsWith(link.href + "/");
+            const isActive = getIsActive(location.pathname, link.href);
 
             return (
               <Link

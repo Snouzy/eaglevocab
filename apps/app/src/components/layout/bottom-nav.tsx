@@ -1,13 +1,13 @@
 import { useLocation } from "react-router";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { BookOpen, Home, Layers, Plus, Settings } from "lucide-react";
+import { BookOpen, CreditCard, Home, Layers, Settings } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
 const links = [
   { href: "/dashboard", icon: Home, label: "Home" },
   { href: "/decks", icon: Layers, label: "Decks" },
-  { href: "/cards/new", icon: Plus, label: "New" },
+  { href: "/cards", icon: CreditCard, label: "Cards" },
   { href: "/books", icon: BookOpen, label: "Books" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];

@@ -29,7 +29,7 @@ interface CardEditDialogProps {
     definition: string | null;
     examples: Example[] | null;
   };
-  deckId: string;
+  deckId?: string;
   trigger?: ReactNode;
 }
 

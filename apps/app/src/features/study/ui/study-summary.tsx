@@ -86,7 +86,7 @@ export function StudySummary({
 
       {/* Bottom actions */}
       <motion.div
-        className="shrink-0 px-4 pt-4 pb-[env(safe-area-inset-bottom,16px)] pb-4"
+        className="shrink-0 px-4 pt-4 pb-[env(safe-area-inset-bottom,16px)] mb-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.6 }}
