@@ -74,6 +74,19 @@ export function CardCreateForm() {
     }
   }, [settingsData, targetLanguageId, setValue]);
 
+  useEffect(() => {
+    const saved = localStorage.getItem("sourceLanguageId");
+    if (saved && !sourceLanguageId) {
+      setValue("sourceLanguageId", saved);
+    }
+  }, [sourceLanguageId, setValue]);
+
+  useEffect(() => {
+    if (sourceLanguageId) {
+      localStorage.setItem("sourceLanguageId", sourceLanguageId);
+    }
+  }, [sourceLanguageId]);
+
   async function handleTranslate() {
     if (!word) {
       toast.error("Please enter a word");
