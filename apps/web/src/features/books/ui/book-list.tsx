@@ -37,7 +37,7 @@ export function BookList() {
     );
   }
 
-  const books = booksData?.data || [];
+  const books = booksData?.data?.books || [];
 
   if (books.length === 0) {
     return (

@@ -37,7 +37,7 @@ export function DeckList() {
     );
   }
 
-  const decks = decksData?.data || [];
+  const decks = decksData?.data?.decks || [];
 
   if (decks.length === 0) {
     return (

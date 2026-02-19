@@ -62,7 +62,7 @@ export const translateWord = async (
   }
   if (includePronunciation) {
     requestFields.push(
-      `pronunciation: phonetic transcription of the word as pronounced by a speaker of ${targetLanguageName}`
+      `pronunciation: an easy-to-read phonetic transcription of the original word "${word}" in ${sourceLanguageName}, written so that a ${targetLanguageName} speaker can read it naturally. Use simple syllables separated by hyphens, enclosed in brackets. Example for Romanian "săgeată" for a French speaker: [seuh-dja-teuh]. NEVER use IPA symbols like ʃ, ɛ, ŋ, θ, etc.`
     );
   }
   if (includeDefinition) {

@@ -1,8 +1,10 @@
 "use client";
 
+import { use } from "react";
 import Link from "next/link";
 import { useCards } from "@/features/cards/hooks/use-cards";
 import { useDeckDetail } from "@/features/decks/hooks/use-decks";
+import { AddCardsToDeckDialog } from "@/features/decks/ui/add-cards-to-deck-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,19 +16,18 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft } from "lucide-react";
 
-export default async function DeckDetailPage({
+export default function DeckDetailPage({
   params,
 }: {
   params: Promise<{ deckId: string }>;
 }) {
-  const { deckId } = await params;
-  const { data: deckData, isLoading: deckLoading } = useDeckDetail(
-    deckId
-  );
+  const { deckId } = use(params);
+  const { data: deckData, isLoading: deckLoading } = useDeckDetail(deckId);
   const { data: cardsData, isLoading: cardsLoading } = useCards(deckId);
 
   const deck = deckData?.data;
-  const cards = cardsData?.data || [];
+  const cards = cardsData?.data?.cards || [];
+  const existingCardIds = cards.map((card: any) => card.id);
 
   return (
     <div className="space-y-6">
@@ -53,9 +54,15 @@ export default async function DeckDetailPage({
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Cards in this deck</CardTitle>
-          <CardDescription>{cards.length} cards total</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Cards in this deck</CardTitle>
+            <CardDescription>{cards.length} cards total</CardDescription>
+          </div>
+          <AddCardsToDeckDialog
+            deckId={deckId}
+            existingCardIds={existingCardIds}
+          />
         </CardHeader>
         <CardContent>
           {cardsLoading ? (

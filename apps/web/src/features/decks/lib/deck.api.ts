@@ -29,3 +29,10 @@ export async function deleteDeck(deckId: string) {
     method: "DELETE",
   });
 }
+
+export async function addCardToDeck(deckId: string, cardId: string) {
+  return apiClient<ApiResponse<any>>(`/api/decks/${deckId}/cards`, {
+    method: "POST",
+    body: JSON.stringify({ cardId }),
+  });
+}

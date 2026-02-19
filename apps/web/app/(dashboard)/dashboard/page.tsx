@@ -17,9 +17,9 @@ export default function DashboardPage() {
   const { data: booksData, isLoading: booksLoading } = useBooks();
   const { data: cardsData, isLoading: cardsLoading } = useCards();
 
-  const decks = decksData?.data || [];
-  const books = booksData?.data || [];
-  const cards = cardsData?.data || [];
+  const decks = decksData?.data?.decks || [];
+  const books = booksData?.data?.books || [];
+  const cards = cardsData?.data?.cards || [];
 
   return (
     <div className="space-y-8">

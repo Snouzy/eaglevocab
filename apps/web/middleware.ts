@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
+function hasSessionCookie(request: NextRequest): boolean {
+  return request.cookies.getAll().some(
+    (c) =>
+      c.name === "better-auth.session_token" ||
+      c.name === "__Secure-better-auth.session_token"
+  );
+}
+
 export function middleware(request: NextRequest) {
-  const sessionCookie = request.cookies.get("session");
+  const isAuthenticated = hasSessionCookie(request);
   const { pathname } = request.nextUrl;
 
   const protectedRoutes = ["/dashboard", "/decks", "/books", "/cards", "/settings"];
@@ -12,11 +20,11 @@ export function middleware(request: NextRequest) {
   );
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-  if (isProtectedRoute && !sessionCookie) {
+  if (isProtectedRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
-  if (isAuthRoute && sessionCookie) {
+  if (isAuthRoute && isAuthenticated) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

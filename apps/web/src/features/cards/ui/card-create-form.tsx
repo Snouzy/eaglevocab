@@ -26,20 +26,8 @@ import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslate } from "../hooks/use-translate";
 import { useCreateCard } from "../hooks/use-create-card";
+import { useLanguages } from "../hooks/use-languages";
 import { useDecks } from "@/features/decks/hooks/use-decks";
-
-const LANGUAGES = [
-  { id: "en", name: "English" },
-  { id: "fr", name: "French" },
-  { id: "es", name: "Spanish" },
-  { id: "de", name: "German" },
-  { id: "it", name: "Italian" },
-  { id: "pt", name: "Portuguese" },
-  { id: "ja", name: "Japanese" },
-  { id: "zh", name: "Chinese" },
-  { id: "ko", name: "Korean" },
-  { id: "ru", name: "Russian" },
-];
 
 interface TranslationResult {
   translation: string | null;
@@ -59,7 +47,10 @@ export function CardCreateForm() {
 
   const translateMutation = useTranslate();
   const createCardMutation = useCreateCard();
+  const { data: languagesData } = useLanguages();
   const { data: decksData } = useDecks();
+
+  const languages = languagesData?.data || [];
 
   const {
     register,
@@ -69,10 +60,6 @@ export function CardCreateForm() {
     formState: { errors },
   } = useForm<CreateCardInput>({
     resolver: zodResolver(createCardSchema),
-    defaultValues: {
-      sourceLanguageId: "en",
-      targetLanguageId: "fr",
-    },
   });
 
   const word = watch("word");
@@ -128,7 +115,7 @@ export function CardCreateForm() {
     }
   }
 
-  const decks = decksData?.data || [];
+  const decks = decksData?.data?.decks || [];
 
   return (
     <Card className="w-full max-w-2xl">
@@ -151,9 +138,9 @@ export function CardCreateForm() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {LANGUAGES.map((lang) => (
+                  {languages.map((lang: any) => (
                     <SelectItem key={lang.id} value={lang.id}>
-                      {lang.name}
+                      {lang.flag} {lang.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -169,9 +156,9 @@ export function CardCreateForm() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {LANGUAGES.map((lang) => (
+                  {languages.map((lang: any) => (
                     <SelectItem key={lang.id} value={lang.id}>
-                      {lang.name}
+                      {lang.flag} {lang.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -291,6 +278,19 @@ export function CardCreateForm() {
                     {...register("definition")}
                     className="mt-1"
                   />
+                </div>
+              )}
+              {includeExamples && translationResult.examples && translationResult.examples.length > 0 && (
+                <div>
+                  <Label>Examples</Label>
+                  <div className="mt-1 space-y-2">
+                    {translationResult.examples.map((ex, i) => (
+                      <div key={i} className="p-2 bg-background border rounded text-sm">
+                        <p>{ex.sentence}</p>
+                        <p className="text-muted-foreground">{ex.translation}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

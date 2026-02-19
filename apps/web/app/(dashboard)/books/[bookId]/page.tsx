@@ -13,12 +13,14 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft } from "lucide-react";
 
-export default async function BookDetailPage({
+import { use } from "react";
+
+export default function BookDetailPage({
   params,
 }: {
   params: Promise<{ bookId: string }>;
 }) {
-  const { bookId } = await params;
+  const { bookId } = use(params);
   const { data: bookData, isLoading: bookLoading } = useBookDetail(bookId);
 
   const book = bookData?.data;
