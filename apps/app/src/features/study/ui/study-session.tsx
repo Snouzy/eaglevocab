@@ -105,7 +105,7 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
   const currentCard = session.cards[session.currentIndex]!;
 
   return (
-    <div className="flex flex-col h-dvh bg-background">
+    <div className="flex flex-col h-dvh bg-background overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 shrink-0">
         <div className="min-w-0">
@@ -133,7 +133,7 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
       </div>
 
       {/* Card — takes all remaining space */}
-      <div className="flex-1 min-h-0 flex items-center justify-center px-4 py-4">
+      <div className="flex-1 min-h-0 flex items-center justify-center px-4 py-4 overflow-y-auto">
         <AnimatePresence mode="wait">
           <motion.div
             key={session.currentIndex}
@@ -154,7 +154,7 @@ export function StudySession({ deckId, mode }: StudySessionProps) {
       </div>
 
       {/* Bottom actions */}
-      <div className="shrink-0 px-4 pb-[env(safe-area-inset-bottom,8px)] pb-4">
+      <div className="shrink-0 px-4 pb-[env(safe-area-inset-bottom,8px)] mb-3">
         <AnimatePresence mode="wait">
           {!session.isFlipped ? (
             <motion.button

@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import type { StudyCard, StudyMode } from "../lib/study-session";
 
 interface StudyCardProps {
@@ -69,32 +69,35 @@ export function StudyCardComponent({ card, isFlipped, mode, onFlip }: StudyCardP
 
   return (
     <div
-      className="w-full max-w-lg cursor-pointer select-none"
+      className="w-full max-w-2xl select-none"
       style={{ perspective: 1000 }}
-      onClick={() => !isFlipped && onFlip()}
     >
-      <motion.div
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.5, type: "spring", stiffness: 300, damping: 25 }}
-        style={{ transformStyle: "preserve-3d" }}
-        className="relative w-full min-h-[200px]"
-      >
-        {/* Front face */}
-        <div
-          className="rounded-2xl border-2 border-border bg-card p-6 shadow-lg flex flex-col items-center justify-center min-h-[200px]"
-          style={{ backfaceVisibility: "hidden" }}
-        >
-          {frontContent}
-        </div>
-
-        {/* Back face */}
-        <div
-          className="absolute inset-0 rounded-2xl border-2 border-primary/30 bg-card p-6 shadow-lg flex flex-col items-center overflow-y-auto"
-          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-        >
-          {backContent}
-        </div>
-      </motion.div>
+      <AnimatePresence mode="wait" initial={false}>
+        {!isFlipped ? (
+          <motion.div
+            key="front"
+            initial={{ rotateY: -90, opacity: 0 }}
+            animate={{ rotateY: 0, opacity: 1 }}
+            exit={{ rotateY: 90, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={onFlip}
+            className="rounded-2xl border-2 border-border bg-card p-8 shadow-lg flex flex-col items-center justify-center min-h-[240px] cursor-pointer"
+          >
+            {frontContent}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="back"
+            initial={{ rotateY: -90, opacity: 0 }}
+            animate={{ rotateY: 0, opacity: 1 }}
+            exit={{ rotateY: 90, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="rounded-2xl border-2 border-primary/30 bg-card p-8 shadow-lg flex flex-col items-center"
+          >
+            {backContent}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
