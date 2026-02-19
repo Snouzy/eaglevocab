@@ -1,0 +1,25 @@
+{
+  "name": "eagle-vocab",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@eagle-vocab/web",
+    "dev:api": "turbo run dev --filter=@eagle-vocab/api",
+    "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
+    "db:generate": "turbo run db:generate --filter=@eagle-vocab/database",
+    "db:push": "turbo run db:push --filter=@eagle-vocab/database",
+    "db:migrate": "turbo run db:migrate --filter=@eagle-vocab/database",
+    "db:seed": "turbo run db:seed --filter=@eagle-vocab/database",
+    "db:studio": "turbo run db:studio --filter=@eagle-vocab/database"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.3",
+    "typescript": "^5.8.2"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=20"
+  }
+}
