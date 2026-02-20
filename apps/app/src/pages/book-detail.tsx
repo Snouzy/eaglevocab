@@ -73,7 +73,6 @@ export function BookDetailPage() {
         <CardHeader>
           <CardTitle>Words in this book</CardTitle>
           <CardDescription>{cards.length} words total</CardDescription>
-          <p className="text-sm text-muted-foreground mt-1">Tap a word to edit it, or use the buttons on the right.</p>
         </CardHeader>
         <CardContent>
           {bookLoading ? (
@@ -89,28 +88,57 @@ export function BookDetailPage() {
               {cards.map((card: any) => (
                 <div
                   key={card.id}
-                  className="flex justify-between items-center p-4 border border-border rounded-lg hover:bg-muted transition-colors"
+                  className="p-4 border border-border rounded-lg hover:bg-muted transition-colors"
                 >
-                  <div>
-                    <p className="font-medium text-base">{card.word}</p>
-                    <p className="text-base text-muted-foreground">
-                      {card.translation}
-                    </p>
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="min-w-0">
+                      <p className="font-medium text-base">{card.word}</p>
+                      <p className="text-base text-muted-foreground">
+                        {card.translation}
+                      </p>
+                    </div>
+                    <div className="hidden sm:flex items-center gap-1 shrink-0">
+                      <CardEditDialog
+                        card={card}
+                        trigger={
+                          <Button variant="ghost" size="sm">
+                            <Pencil className="h-4 w-4 mr-1.5" />
+                            Edit
+                          </Button>
+                        }
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-muted-foreground hover:text-destructive"
+                        onClick={async () => {
+                          try {
+                            await removeCardMutation.mutateAsync(card.id);
+                            toast.success("Word removed from book");
+                          } catch {
+                            toast.error("Failed to remove word");
+                          }
+                        }}
+                      >
+                        <X className="h-4 w-4 mr-1.5" />
+                        Remove
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex sm:hidden items-center gap-2 mt-3 pt-3 border-t border-border">
                     <CardEditDialog
                       card={card}
                       trigger={
-                        <Button variant="ghost" size="sm">
+                        <Button variant="outline" size="sm" className="flex-1">
                           <Pencil className="h-4 w-4 mr-1.5" />
                           Edit
                         </Button>
                       }
                     />
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="text-muted-foreground hover:text-destructive"
+                      className="flex-1 text-muted-foreground hover:text-destructive hover:border-destructive"
                       onClick={async () => {
                         try {
                           await removeCardMutation.mutateAsync(card.id);
