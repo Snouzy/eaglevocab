@@ -12,7 +12,7 @@ export default function Problem() {
       icon: Clock,
       title: 'You waste time on scattered notes',
       description:
-        'Word lists in notebooks, phone apps, sticky notes — nothing is organized or reviewable.',
+        'Word lists in notebooks, phone apps, sticky notes nothing is organized or reviewable.',
     },
     {
       icon: X,
@@ -33,7 +33,7 @@ export default function Problem() {
 
           <p className="mt-8 text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
             You&apos;re reading a great book in a foreign language. You encounter an unknown word.
-            You look it up. Two pages later — another one. You look it up too.
+            You look it up. Two pages later... another one. You look it up too.
           </p>
 
           <p className="mt-4 text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">

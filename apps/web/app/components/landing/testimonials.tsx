@@ -11,7 +11,7 @@ export default function Testimonials() {
     {
       name: 'Sarah M.',
       role: 'English Teacher',
-      text: 'I used to keep word lists in notebooks that I never reviewed. EagleVocab changed everything — the spaced repetition actually makes words stick.',
+      text: 'I used to keep word lists in notebooks that I never reviewed. EagleVocab changed everything the spaced repetition actually makes words stick.',
       avatar: 'S',
     },
     {
