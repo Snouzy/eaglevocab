@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateSettingsSchema, type UpdateSettingsInput } from "@eagle-vocab/types";
@@ -13,39 +14,44 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useSettings, useUpdateSettings } from "../hooks/use-settings";
+import { useLanguages } from "@/features/cards/hooks/use-languages";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const LANGUAGES = [
-  { id: "en", name: "English" },
-  { id: "fr", name: "French" },
-  { id: "es", name: "Spanish" },
-  { id: "de", name: "German" },
-  { id: "it", name: "Italian" },
-  { id: "pt", name: "Portuguese" },
-  { id: "ja", name: "Japanese" },
-  { id: "zh", name: "Chinese" },
-  { id: "ko", name: "Korean" },
-  { id: "ru", name: "Russian" },
-];
-
 export function SettingsForm() {
-  const { data: settingsData, isLoading } = useSettings();
+  const { data: settingsData, isLoading: isLoadingSettings } = useSettings();
+  const { data: languagesData, isLoading: isLoadingLanguages } = useLanguages();
   const updateSettingsMutation = useUpdateSettings();
+
+  const languages = languagesData?.data || [];
 
   const {
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { isDirty },
   } = useForm<UpdateSettingsInput>({
     resolver: zodResolver(updateSettingsSchema),
     defaultValues: {
-      nativeLanguageId: settingsData?.data?.nativeLanguageId || "en",
-      showPronunciation: settingsData?.data?.showPronunciation ?? true,
-      showExamples: settingsData?.data?.showExamples ?? true,
-      showDefinition: settingsData?.data?.showDefinition ?? true,
+      nativeLanguageId: "en",
+      showPronunciation: true,
+      showExamples: true,
+      showDefinition: true,
     },
   });
+
+  const settings = settingsData?.data;
+
+  useEffect(() => {
+    if (settings) {
+      reset({
+        nativeLanguageId: settings.nativeLanguageId || "",
+        showPronunciation: settings.showPronunciation ?? true,
+        showExamples: settings.showExamples ?? true,
+        showDefinition: settings.showDefinition ?? true,
+      });
+    }
+  }, [settings, reset]);
 
   const nativeLanguageId = watch("nativeLanguageId");
   const showPronunciation = watch("showPronunciation");
@@ -61,7 +67,7 @@ export function SettingsForm() {
     }
   }
 
-  if (isLoading) {
+  if (isLoadingSettings || isLoadingLanguages) {
     return (
       <div className="space-y-4">
         <Skeleton className="h-12" />
@@ -85,9 +91,9 @@ export function SettingsForm() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {LANGUAGES.map((lang) => (
+                {languages.map((lang: any) => (
                   <SelectItem key={lang.id} value={lang.id}>
-                    {lang.name}
+                    {lang.flag} {lang.name}
                   </SelectItem>
                 ))}
               </SelectContent>

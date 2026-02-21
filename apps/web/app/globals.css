@@ -37,6 +37,20 @@
   }
 }
 
+@layer utilities {
+  .text-highlight {
+    background-image: linear-gradient(to top, #fde68a 35%, transparent 35%);
+    padding: 0 2px;
+    display: inline;
+  }
+
+  .text-highlight-strong {
+    background-color: #fbbf24;
+    padding: 2px 8px;
+    display: inline;
+  }
+}
+
 .perspective-1000 {
   perspective: 1000px;
 }
