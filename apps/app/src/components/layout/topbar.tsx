@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
-import { BookOpen, LogOut } from "lucide-react";
+import { Bird, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { authClient, useSession } from "@/features/auth/lib/auth-client";
 import { toast } from "sonner";
 
@@ -28,26 +27,23 @@ export function Topbar() {
   }
 
   return (
-    <div className="h-16 bg-card shadow-sm flex items-center justify-between px-6">
+    <div className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
       <Link
         to="/dashboard"
-        className="flex items-center gap-2 font-bold text-foreground text-lg lg:hidden"
+        className="flex items-center gap-2 text-lg lg:hidden"
       >
-        <BookOpen className="h-6 w-6 text-primary" />
-        EagleVocab
+        <Bird className="h-6 w-6 text-primary" />
+        <span className="font-extrabold text-foreground tracking-tight">EagleVocab</span>
       </Link>
       <div className="hidden lg:block lg:flex-1" />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="relative flex items-center gap-2 h-10 rounded-full bg-primary text-primary-foreground text-sm font-medium px-3"
-          >
-            <span className="h-8 w-8 rounded-full bg-primary-foreground/20 flex items-center justify-center text-sm font-bold">
+          <button className="relative flex items-center gap-2 h-10 rounded-full bg-neutral-900 text-white text-sm font-bold px-3 cursor-pointer hover:bg-neutral-800 transition-colors">
+            <span className="h-7 w-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
               {session?.user?.name?.[0]?.toUpperCase() || "U"}
             </span>
-            <span className="hidden lg:inline text-sm">{session?.user?.name || "User"}</span>
-          </Button>
+            <span className="hidden lg:inline text-sm pr-1">{session?.user?.name || "User"}</span>
+          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>

@@ -46,9 +46,9 @@ export function SignInForm() {
   }
 
   return (
-    <Card className="w-full max-w-md shadow-lg">
+    <Card className="w-full max-w-md shadow-lg border-t-4 border-t-primary">
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
+        <CardTitle className="text-2xl font-black uppercase">Sign In</CardTitle>
         <CardDescription>
           Sign in to your EagleVocab account
         </CardDescription>

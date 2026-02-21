@@ -36,7 +36,7 @@ export function CardList() {
     return (
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
-          <Skeleton key={i} className="h-32" />
+          <Skeleton key={i} className="h-32 rounded-2xl" />
         ))}
       </div>
     );
@@ -67,10 +67,10 @@ export function CardList() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: i * 0.03 }}
         >
-          <Card className="shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
+          <Card className="hover:-translate-y-0.5 hover:shadow-md hover:border-primary/30 transition-all duration-200 group">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between gap-2">
-                <CardTitle className="truncate text-base">{card.word}</CardTitle>
+                <CardTitle className="truncate text-lg font-black">{card.word}</CardTitle>
                 <div className="flex items-center gap-1 text-base shrink-0">
                   {card.sourceLanguage?.flag}
                   <span className="text-xs text-muted-foreground">→</span>
@@ -79,7 +79,7 @@ export function CardList() {
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-base text-muted-foreground mb-3 truncate">
+              <p className="text-base text-muted-foreground mb-4 truncate">
                 {card.translation || "No translation"}
               </p>
               <div className="flex gap-2">

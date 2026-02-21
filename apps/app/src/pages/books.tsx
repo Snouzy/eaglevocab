@@ -6,7 +6,7 @@ export function BooksPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Books</h1>
+          <h1 className="text-3xl font-black tracking-tight uppercase">My Books</h1>
           <p className="text-muted-foreground">
             All the books you're reading
           </p>

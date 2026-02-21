@@ -22,8 +22,8 @@ export function DashboardPage() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">Here's an overview of your vocabulary</p>
+        <h1 className="text-3xl font-black tracking-tight uppercase">Dashboard</h1>
+        <p className="text-muted-foreground">Here&apos;s an overview of your vocabulary</p>
       </div>
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -35,7 +35,7 @@ export function DashboardPage() {
             {decksLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-3xl font-bold">{decks.length}</div>
+              <div className="text-3xl font-black text-primary">{decks.length}</div>
             )}
             <p className="text-sm text-muted-foreground mt-1">
               Organized learning sets
@@ -51,7 +51,7 @@ export function DashboardPage() {
             {booksLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-3xl font-bold">{books.length}</div>
+              <div className="text-3xl font-black text-primary">{books.length}</div>
             )}
             <p className="text-sm text-muted-foreground mt-1">
               Books you're reading
@@ -67,7 +67,7 @@ export function DashboardPage() {
             {cardsLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <div className="text-3xl font-bold">{cards.length}</div>
+              <div className="text-3xl font-black text-primary">{cards.length}</div>
             )}
             <p className="text-sm text-muted-foreground mt-1">
               Vocabulary words

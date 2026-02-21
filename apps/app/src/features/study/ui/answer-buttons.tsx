@@ -7,10 +7,10 @@ interface AnswerButtonsProps {
 }
 
 const buttons = [
-  { quality: 1, label: "Again", shortcut: "1", className: "bg-red-500 hover:bg-red-600 text-white" },
-  { quality: 2, label: "Hard", shortcut: "2", className: "bg-orange-500 hover:bg-orange-600 text-white" },
-  { quality: 3, label: "Good", shortcut: "3", className: "bg-blue-500 hover:bg-blue-600 text-white" },
-  { quality: 4, label: "Easy", shortcut: "4", className: "bg-green-500 hover:bg-green-600 text-white" },
+  { quality: 1, label: "Again", shortcut: "1", className: "bg-red-500/15 text-red-600 hover:bg-red-500/25 border border-red-500/20" },
+  { quality: 2, label: "Hard", shortcut: "2", className: "bg-orange-500/15 text-orange-600 hover:bg-orange-500/25 border border-orange-500/20" },
+  { quality: 3, label: "Good", shortcut: "3", className: "bg-amber-400 text-black hover:bg-amber-300" },
+  { quality: 4, label: "Easy", shortcut: "4", className: "bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500/25 border border-emerald-500/20" },
 ];
 
 export function AnswerButtons({ onAnswer, disabled }: AnswerButtonsProps) {

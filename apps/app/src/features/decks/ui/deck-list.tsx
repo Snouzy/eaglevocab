@@ -68,7 +68,7 @@ export function DeckList() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: i * 0.05 }}
         >
-          <Card className="shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
+          <Card className="hover:-translate-y-0.5 hover:shadow-md hover:border-primary/30 transition-all duration-200 group">
             <CardHeader>
               <CardTitle className="truncate">{deck.name}</CardTitle>
               {deck.description && (

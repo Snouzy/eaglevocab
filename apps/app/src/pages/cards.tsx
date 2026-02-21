@@ -8,7 +8,7 @@ export function CardsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Cards</h1>
+          <h1 className="text-3xl font-black tracking-tight uppercase">My Cards</h1>
           <p className="text-muted-foreground">
             All your vocabulary words in one place
           </p>

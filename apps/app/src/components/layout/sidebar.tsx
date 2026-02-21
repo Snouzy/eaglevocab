@@ -1,7 +1,7 @@
 import { useLocation } from "react-router";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { BookOpen, CreditCard, Home, Layers, Plus, Settings } from "lucide-react";
+import { Bird, CreditCard, Home, Layers, BookOpen, Plus, Settings } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
 const links = [
@@ -33,15 +33,15 @@ export function Sidebar() {
       <div className="h-16 flex items-center px-6 border-b border-sidebar-border">
         <Link
           to="/dashboard"
-          className="flex items-center gap-2 font-bold text-sidebar-foreground text-lg"
+          className="flex items-center gap-2 text-lg"
         >
-          <BookOpen className="h-6 w-6 text-primary" />
-          EagleVocab
+          <Bird className="h-6 w-6 text-sidebar-active" />
+          <span className="font-extrabold text-sidebar-foreground tracking-tight">EagleVocab</span>
         </Link>
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4">
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           {links.map((link) => {
             const Icon = link.icon;
             const isActive = getIsActive(location.pathname, link.href);
@@ -51,10 +51,10 @@ export function Sidebar() {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  "relative flex items-center gap-3 px-4 py-3.5 text-base font-medium rounded-lg mx-3 transition-colors",
+                  "relative flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg mx-3 transition-colors",
                   isActive
                     ? "text-sidebar-active"
-                    : "text-sidebar-muted hover:text-sidebar-foreground hover:bg-muted"
+                    : "text-sidebar-muted hover:text-sidebar-foreground hover:bg-white/5"
                 )}
               >
                 {isActive && (
@@ -64,7 +64,7 @@ export function Sidebar() {
                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                   />
                 )}
-                <Icon className="h-6 w-6 relative z-10" />
+                <Icon className="h-5 w-5 relative z-10" />
                 <span className="relative z-10">{link.label}</span>
               </Link>
             );
