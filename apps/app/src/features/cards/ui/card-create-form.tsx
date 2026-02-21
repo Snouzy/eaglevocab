@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCardSchema, type CreateCardInput } from "@eagle-vocab/types";
 import { toast } from "sonner";
-import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -73,12 +72,19 @@ export function CardCreateForm() {
   const targetLanguageId = watch("targetLanguageId");
   const selectedBookId = watch("bookId");
 
+  const [debouncedWord, setDebouncedWord] = useState("");
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedWord(word || ""), 500);
+    return () => clearTimeout(timeout);
+  }, [word]);
+
   const sourceLang = languages.find((l: any) => l.id === sourceLanguageId);
   const targetLang = languages.find((l: any) => l.id === targetLanguageId);
   const bothLangsSet = !!sourceLanguageId && !!targetLanguageId;
 
   const { suggestions, isLoading: isSuggesting } = useSuggest(
-    suggestEnabled ? word : "",
+    suggestEnabled ? debouncedWord : "",
     sourceLang?.code
   );
 
@@ -326,7 +332,7 @@ export function CardCreateForm() {
             Translating...
           </>
         ) : (
-          "Translate"
+          <>Translate{word?.trim() ? ` "${word.trim()}"` : ""}</>
         )}
       </Button>
 
@@ -366,12 +372,7 @@ export function CardCreateForm() {
         )}
 
         {translationResult && !isTranslating && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.2 }}
-            className="p-5 space-y-4"
-          >
+          <div className="p-5 space-y-4 animate-in fade-in duration-200">
             {resultFields.map((rf) =>
               rf.value ? (
                 <div key={rf.key}>
@@ -404,7 +405,7 @@ export function CardCreateForm() {
                 </div>
               </div>
             )}
-          </motion.div>
+          </div>
         )}
       </div>
 
