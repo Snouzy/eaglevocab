@@ -4,6 +4,8 @@ import {
   UpdateCardInput,
   TranslateRequest,
   TranslationResponse,
+  SuggestRequest,
+  SuggestResponse,
 } from "@eagle-vocab/types";
 import { ApiResponse } from "@eagle-vocab/types";
 
@@ -38,6 +40,13 @@ export async function deleteCard(cardId: string) {
 
 export async function translate(data: TranslateRequest) {
   return apiClient<ApiResponse<TranslationResponse>>("/api/translate", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function suggest(data: SuggestRequest) {
+  return apiClient<ApiResponse<SuggestResponse>>("/api/suggest", {
     method: "POST",
     body: JSON.stringify(data),
   });

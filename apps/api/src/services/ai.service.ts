@@ -30,6 +30,14 @@ const languageNames: Record<string, string> = {
   zh: "Chinese",
   ar: "Arabic",
   hi: "Hindi",
+  tr: "Turkish",
+  nl: "Dutch",
+  pl: "Polish",
+  ro: "Romanian",
+  sv: "Swedish",
+  vi: "Vietnamese",
+  th: "Thai",
+  id: "Indonesian",
 };
 
 export const translateWord = async (
@@ -114,5 +122,36 @@ Ensure the response is valid JSON.`;
   } catch (error) {
     logger.error("Translation service error", error);
     throw error;
+  }
+};
+
+export const suggestDiacritics = async (
+  word: string,
+  languageCode: string
+): Promise<string[]> => {
+  const languageName = languageNames[languageCode] || languageCode;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "user",
+          content: `Add correct diacritics/accents to this ${languageName} word: "${word}". Return JSON: {"suggestions": ["word1"]}. Max 3 suggestions. If already correct or no diacritics needed, return {"suggestions": []}.`,
+        },
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0,
+      max_tokens: 30,
+    });
+
+    const message = response.choices[0]?.message;
+    if (!message?.content) return [];
+
+    const parsed = JSON.parse(message.content);
+    return (parsed.suggestions || []).filter((s: string) => s.toLowerCase() !== word.toLowerCase());
+  } catch (error) {
+    logger.error("Suggest diacritics error", error);
+    return [];
   }
 };

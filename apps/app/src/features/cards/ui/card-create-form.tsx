@@ -15,11 +15,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2, Check, ChevronDown } from "lucide-react";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { cn } from "@/shared/lib/utils";
 import { useSearchParams } from "react-router";
 import { useTranslate } from "../hooks/use-translate";
 import { useCreateCard } from "../hooks/use-create-card";
 import { useLanguages } from "../hooks/use-languages";
+import { useSuggest } from "../hooks/use-suggest";
 import { useDecks } from "@/features/decks/hooks/use-decks";
 import { useSettings } from "@/features/settings/hooks/use-settings";
 import { useBooks, useBookDetail } from "@/features/books/hooks/use-books";
@@ -38,6 +40,7 @@ export function CardCreateForm() {
   const [justSaved, setJustSaved] = useState(false);
   const [showLanguages, setShowLanguages] = useState(false);
   const [showOrganize, setShowOrganize] = useState(false);
+  const [suggestEnabled, setSuggestEnabled] = useState(true);
 
   const [searchParams] = useSearchParams();
   const bookId = searchParams.get("bookId");
@@ -70,6 +73,11 @@ export function CardCreateForm() {
   const sourceLang = languages.find((l: any) => l.id === sourceLanguageId);
   const targetLang = languages.find((l: any) => l.id === targetLanguageId);
   const bothLangsSet = !!sourceLanguageId && !!targetLanguageId;
+
+  const { suggestions, isLoading: isSuggesting } = useSuggest(
+    suggestEnabled ? word : "",
+    sourceLang?.code
+  );
 
   useEffect(() => {
     if (bookId) {
@@ -249,18 +257,70 @@ export function CardCreateForm() {
           {...register("word")}
           className="mt-1 text-lg h-14"
         />
-        <AnimatePresence>
-          {errors.word && (
-            <motion.p
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="text-sm text-destructive mt-1 overflow-hidden"
-            >
-              {errors.word.message}
-            </motion.p>
+        <div
+          className={cn(
+            "grid transition-all duration-300 ease-out",
+            errors.word ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           )}
-        </AnimatePresence>
+        >
+          <p className="overflow-hidden text-sm text-destructive mt-1">
+            {errors.word?.message ?? "\u00A0"}
+          </p>
+        </div>
+        <div className="flex items-center justify-between mt-1">
+          <div className="text-sm text-muted-foreground">
+            {suggestEnabled && isSuggesting && (
+              <span className="flex items-center gap-1.5">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Looking for suggestions...
+              </span>
+            )}
+            {suggestEnabled && !isSuggesting && suggestions.length > 0 && (
+              <span>Did you mean?</span>
+            )}
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setSuggestEnabled(!suggestEnabled)}
+              className={cn(
+                "text-sm transition-colors",
+                suggestEnabled
+                  ? "text-primary hover:text-primary/80"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {suggestEnabled ? "Disable suggestions" : "Enable suggestions"}
+            </button>
+            <HelpTooltip
+              title="Suggestions"
+              content="When you type without accents or special characters, we suggest the correct spelling. Useful when you don't have the right keyboard installed."
+            />
+          </div>
+        </div>
+        <div
+          className={cn(
+            "grid transition-all duration-300 ease-out",
+            suggestEnabled && suggestions.length > 0
+              ? "grid-rows-[1fr] opacity-100"
+              : "grid-rows-[0fr] opacity-0"
+          )}
+        >
+          <div className="overflow-hidden">
+            <div className="flex flex-wrap gap-2 mt-1.5 pb-0.5">
+              {suggestions.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setValue("word", s)}
+                  className="px-3 py-1.5 text-base bg-primary/10 text-primary rounded-full hover:bg-primary/20 transition-colors border border-primary/20"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Translate button — primary action */}

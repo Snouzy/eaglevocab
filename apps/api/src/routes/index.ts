@@ -9,10 +9,12 @@ import {
   createBookSchema,
   updateBookSchema,
   translateRequestSchema,
+  suggestRequestSchema,
   updateSettingsSchema,
 } from "@eagle-vocab/types";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { validate } from "../middlewares/validation.middleware";
+import { suggestDiacritics } from "../services/ai.service";
 import * as cardController from "../controllers/card.controller";
 import * as deckController from "../controllers/deck.controller";
 import * as bookController from "../controllers/book.controller";
@@ -29,6 +31,21 @@ router.post(
   authMiddleware,
   validate(translateRequestSchema),
   translationController.translate
+);
+
+router.post(
+  "/suggest",
+  authMiddleware,
+  validate(suggestRequestSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { word, languageCode } = req.body;
+      const suggestions = await suggestDiacritics(word, languageCode);
+      res.json({ success: true, data: { suggestions } });
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
 router.get("/cards", authMiddleware, cardController.listCards);
