@@ -10,9 +10,9 @@ const booksData = [
     count: 47,
     dueCards: 12,
     cards: [
-      { word: 'éphémère', pron: '/e.fe.mɛʁ/', translation: 'ephemeral', def: 'short-lived, transient' },
-      { word: 'papillon', pron: '/pa.pi.jɔ̃/', translation: 'butterfly', def: 'a winged insect with colored wings' },
-      { word: 'lumière', pron: '/ly.mjɛʁ/', translation: 'light', def: 'brightness, illumination' },
+      { word: 'éphémère', pron: '[ay-fay-mair]', translation: 'ephemeral', def: 'short-lived, transient' },
+      { word: 'papillon', pron: '[pa-pee-yon]', translation: 'butterfly', def: 'a winged insect with colored wings' },
+      { word: 'lumière', pron: '[loo-myair]', translation: 'light', def: 'brightness, illumination' },
     ],
   },
   {
@@ -21,9 +21,9 @@ const booksData = [
     count: 23,
     dueCards: 8,
     cards: [
-      { word: 'Schuld', pron: '/ʃʊlt/', translation: 'guilt', def: 'responsibility for wrongdoing' },
-      { word: 'Gericht', pron: '/ɡəˈʁɪçt/', translation: 'court', def: 'a judicial tribunal' },
-      { word: 'Freiheit', pron: '/ˈfʁaɪ̯haɪ̯t/', translation: 'freedom', def: 'the state of being free' },
+      { word: 'Schuld', pron: '[shoolt]', translation: 'guilt', def: 'responsibility for wrongdoing' },
+      { word: 'Gericht', pron: '[geh-risht]', translation: 'court', def: 'a judicial tribunal' },
+      { word: 'Freiheit', pron: '[fry-hyte]', translation: 'freedom', def: 'the state of being free' },
     ],
   },
   {
@@ -32,9 +32,9 @@ const booksData = [
     count: 31,
     dueCards: 15,
     cards: [
-      { word: '恥', pron: '/haji/', translation: 'shame', def: 'a painful feeling of humiliation' },
-      { word: '人間', pron: '/ningen/', translation: 'human', def: 'a person, humanity' },
-      { word: '孤独', pron: '/kodoku/', translation: 'solitude', def: 'the state of being alone' },
+      { word: '恥', pron: '[ha-ji]', translation: 'shame', def: 'a painful feeling of humiliation' },
+      { word: '人間', pron: '[nin-ghen]', translation: 'human', def: 'a person, humanity' },
+      { word: '孤独', pron: '[ko-do-ku]', translation: 'solitude', def: 'the state of being alone' },
     ],
   },
   {
@@ -43,9 +43,9 @@ const booksData = [
     count: 18,
     dueCards: 6,
     cards: [
-      { word: 'soledad', pron: '/so.le.ˈðað/', translation: 'solitude', def: 'the state of being alone' },
-      { word: 'mariposa', pron: '/ma.ɾi.ˈpo.sa/', translation: 'butterfly', def: 'a winged insect' },
-      { word: 'olvido', pron: '/ol.ˈbi.ðo/', translation: 'oblivion', def: 'the state of being forgotten' },
+      { word: 'soledad', pron: '[so-leh-dad]', translation: 'solitude', def: 'the state of being alone' },
+      { word: 'mariposa', pron: '[ma-ree-po-sa]', translation: 'butterfly', def: 'a winged insect' },
+      { word: 'olvido', pron: '[ol-vee-do]', translation: 'oblivion', def: 'the state of being forgotten' },
     ],
   },
 ];
