@@ -130,7 +130,8 @@ export function StudyCardComponent({ card, isFlipped, mode, onFlip }: StudyCardP
             animate={{ rotateY: 0, opacity: 1 }}
             exit={{ rotateY: 90, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="rounded-2xl border-2 border-primary/30 bg-card p-8 shadow-lg flex flex-col items-center"
+            onClick={onFlip}
+            className="rounded-2xl border-2 border-primary/30 bg-card p-8 shadow-lg flex flex-col items-center cursor-pointer"
           >
             {backContent}
           </motion.div>
