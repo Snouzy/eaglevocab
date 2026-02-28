@@ -1,5 +1,8 @@
 import { motion, AnimatePresence } from "motion/react";
+import { Volume2, Loader2 } from "lucide-react";
 import type { StudyCard, StudyMode } from "../lib/study-session";
+import { Button } from "@/components/ui/button";
+import { useTts } from "../hooks/use-tts";
 
 interface StudyCardProps {
   card: StudyCard;
@@ -9,6 +12,27 @@ interface StudyCardProps {
 }
 
 export function StudyCardComponent({ card, isFlipped, mode, onFlip }: StudyCardProps) {
+  const { speak, isSpeaking } = useTts();
+
+  const handleTtsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isSpeaking) return;
+
+    if (!isFlipped) {
+      if (mode === "normal") {
+        speak(card.word, card.sourceLanguage.name);
+      } else {
+        speak(card.translation || "", card.targetLanguage.name);
+      }
+    } else {
+      if (mode === "normal") {
+        speak(card.translation || "", card.targetLanguage.name);
+      } else {
+        speak(card.word, card.sourceLanguage.name);
+      }
+    }
+  };
+
   const frontContent = mode === "normal" ? (
     <div className="text-center space-y-3">
       <p className="text-3xl sm:text-4xl font-bold">{card.word}</p>
@@ -69,9 +93,23 @@ export function StudyCardComponent({ card, isFlipped, mode, onFlip }: StudyCardP
 
   return (
     <div
-      className="w-full max-w-2xl select-none"
+      className="w-full max-w-2xl select-none relative"
       style={{ perspective: 1000 }}
     >
+      <Button
+        onClick={handleTtsClick}
+        variant="ghost"
+        size="icon"
+        aria-label="Speak text"
+        className="absolute top-4 right-4 z-10"
+        disabled={isSpeaking}
+      >
+        {isSpeaking ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Volume2 className="h-4 w-4" />
+        )}
+      </Button>
       <AnimatePresence mode="wait" initial={false}>
         {!isFlipped ? (
           <motion.div
