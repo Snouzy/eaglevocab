@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { X } from "lucide-react";
 import { useStudyCards, useBookStudyCards, useReviewCard } from "../hooks/use-study";
+import { useFeedbackSound } from "../hooks/use-feedback-sound";
 import { StudyCardComponent } from "./study-card";
 import { AnswerButtons } from "./answer-buttons";
 import { StudyProgress } from "./study-progress";
@@ -30,6 +31,7 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
   const bookQuery = useBookStudyCards(bookId || "");
   const isBook = !!bookId;
   const reviewMutation = useReviewCard();
+  const { play: playFeedback } = useFeedbackSound();
   const [session, setSession] = useState<SessionState | null>(null);
 
   const isLoading = isBook ? bookQuery.isLoading : deckQuery.isLoading;
@@ -55,6 +57,7 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
     (quality: number) => {
       if (!session || !session.isFlipped || session.isComplete) return;
       const currentCard = session.cards[session.currentIndex]!;
+      playFeedback(quality);
       reviewMutation.mutate({ cardId: currentCard.id, quality });
       setSession(answerCard(session, quality));
     },
