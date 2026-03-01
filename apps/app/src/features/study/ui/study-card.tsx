@@ -17,23 +17,27 @@ const FEEDBACK_ANIMATIONS: Record<
   number,
   { keyframes: Record<string, number[]>; glow: string; duration: number }
 > = {
+  // Shake horizontal + brief dim — "oops, try again"
   1: {
-    keyframes: { x: [0, -4, 4, -3, 3, 0] },
+    keyframes: { x: [0, -6, 6, -4, 4, 0], opacity: [1, 0.6, 0.8, 0.9, 1, 1] },
     glow: "0 0 20px rgba(239, 68, 68, 0.35)",
-    duration: 0.35,
-  },
-  2: {
-    keyframes: { scale: [1, 1.03, 1] },
-    glow: "0 0 20px rgba(249, 115, 22, 0.35)",
-    duration: 0.3,
-  },
-  3: {
-    keyframes: { scale: [1, 1.05, 0.97, 1] },
-    glow: "0 0 30px rgba(251, 191, 36, 0.45)",
     duration: 0.4,
   },
+  // Tilt wobble — "hmm, tough one"
+  2: {
+    keyframes: { rotateZ: [0, -2, 2, -1, 0], y: [0, 2, -1, 0] },
+    glow: "0 0 20px rgba(249, 115, 22, 0.35)",
+    duration: 0.35,
+  },
+  // Upward pop — "nice!"
+  3: {
+    keyframes: { y: [0, -10, 0], scale: [1, 1.04, 1] },
+    glow: "0 0 30px rgba(251, 191, 36, 0.45)",
+    duration: 0.35,
+  },
+  // Celebratory lift + scale + rotation — "jackpot"
   4: {
-    keyframes: { scale: [1, 1.08, 0.95, 1.02, 1] },
+    keyframes: { y: [0, -18, -4, 0], scale: [1, 1.1, 0.97, 1], rotateZ: [0, -2, 1, 0] },
     glow: "0 0 40px rgba(16, 185, 129, 0.5)",
     duration: 0.5,
   },
