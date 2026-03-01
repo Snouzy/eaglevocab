@@ -33,6 +33,7 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
   const reviewMutation = useReviewCard();
   const { play: playFeedback } = useFeedbackSound();
   const [session, setSession] = useState<SessionState | null>(null);
+  const [feedbackQuality, setFeedbackQuality] = useState<number | null>(null);
 
   const isLoading = isBook ? bookQuery.isLoading : deckQuery.isLoading;
   const cards = isBook
@@ -49,19 +50,24 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
   }, [cards, mode, session]);
 
   const handleFlip = useCallback(() => {
-    if (!session || session.isComplete) return;
+    if (!session || session.isComplete || feedbackQuality !== null) return;
     setSession(flipCard(session));
-  }, [session]);
+  }, [session, feedbackQuality]);
 
   const handleAnswer = useCallback(
     (quality: number) => {
-      if (!session || !session.isFlipped || session.isComplete) return;
+      if (!session || !session.isFlipped || session.isComplete || feedbackQuality !== null) return;
       const currentCard = session.cards[session.currentIndex]!;
       playFeedback(quality);
       reviewMutation.mutate({ cardId: currentCard.id, quality });
-      setSession(answerCard(session, quality));
+      setFeedbackQuality(quality);
+      const delay = quality <= 2 ? 450 : quality === 3 ? 550 : 750;
+      setTimeout(() => {
+        setSession(answerCard(session, quality));
+        setFeedbackQuality(null);
+      }, delay);
     },
-    [session, reviewMutation]
+    [session, reviewMutation, feedbackQuality]
   );
 
   const handleExit = useCallback(() => {
@@ -165,6 +171,7 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
               isFlipped={session.isFlipped}
               mode={session.mode}
               onFlip={handleFlip}
+              feedbackQuality={feedbackQuality}
             />
           </motion.div>
         </AnimatePresence>
@@ -193,7 +200,7 @@ export function StudySession({ deckId, bookId, mode }: StudySessionProps) {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.15 }}
             >
-              <AnswerButtons onAnswer={handleAnswer} disabled={false} />
+              <AnswerButtons onAnswer={handleAnswer} disabled={feedbackQuality !== null} />
             </motion.div>
           )}
         </AnimatePresence>
