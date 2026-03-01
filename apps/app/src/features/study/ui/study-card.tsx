@@ -29,12 +29,12 @@ const FEEDBACK_ANIMATIONS: Record<
   },
   3: {
     keyframes: { scale: [1, 1.05, 0.97, 1] },
-    glow: "0 0 30px rgba(34, 197, 94, 0.45)",
+    glow: "0 0 30px rgba(251, 191, 36, 0.45)",
     duration: 0.4,
   },
   4: {
     keyframes: { scale: [1, 1.08, 0.95, 1.02, 1] },
-    glow: "0 0 40px rgba(234, 179, 8, 0.5)",
+    glow: "0 0 40px rgba(16, 185, 129, 0.5)",
     duration: 0.5,
   },
 };
