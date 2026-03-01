@@ -115,6 +115,31 @@ export function StudyCardComponent({
     ? FEEDBACK_ANIMATIONS[feedbackQuality]
     : null;
 
+  const handleExampleTts = (e: React.MouseEvent, text: string, lang: string) => {
+    e.stopPropagation();
+    speak(text, lang);
+  };
+
+  const renderExamples = (examples: Array<{ sentence: string; translation: string }>) => (
+    <div className="space-y-2 pt-2 border-t border-border text-left">
+      {examples.map((ex, i) => (
+        <div key={i} className="p-2.5 bg-muted rounded-lg text-base space-y-1">
+          <div className="flex items-start gap-1.5">
+            <p className="font-medium flex-1">{ex.sentence}</p>
+            <button
+              onClick={(e) => handleExampleTts(e, ex.sentence, card.sourceLanguage.name)}
+              className="shrink-0 p-1 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Speak example"
+            >
+              <Volume2 className="h-3.5 w-3.5" />
+            </button>
+          </div>
+          <p className="text-muted-foreground">{ex.translation}</p>
+        </div>
+      ))}
+    </div>
+  );
+
   const frontContent =
     mode === "normal" ? (
       <div className="text-center space-y-3">
@@ -146,16 +171,7 @@ export function StudyCardComponent({
         {card.definition && (
           <p className="text-lg text-muted-foreground">{card.definition}</p>
         )}
-        {card.examples && card.examples.length > 0 && (
-          <div className="space-y-2 pt-2 border-t border-border text-left">
-            {card.examples.map((ex: any, i: number) => (
-              <div key={i} className="p-2.5 bg-muted rounded-lg text-base">
-                <p className="font-medium">{ex.sentence}</p>
-                <p className="text-muted-foreground">{ex.translation}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        {card.examples && card.examples.length > 0 && renderExamples(card.examples)}
       </div>
     ) : (
       <div className="text-center space-y-4 w-full">
@@ -166,16 +182,7 @@ export function StudyCardComponent({
         {card.definition && (
           <p className="text-lg text-muted-foreground">{card.definition}</p>
         )}
-        {card.examples && card.examples.length > 0 && (
-          <div className="space-y-2 pt-2 border-t border-border text-left">
-            {card.examples.map((ex: any, i: number) => (
-              <div key={i} className="p-2.5 bg-muted rounded-lg text-base">
-                <p className="font-medium">{ex.sentence}</p>
-                <p className="text-muted-foreground">{ex.translation}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        {card.examples && card.examples.length > 0 && renderExamples(card.examples)}
       </div>
     );
 
