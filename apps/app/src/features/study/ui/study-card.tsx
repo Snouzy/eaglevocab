@@ -175,6 +175,9 @@ export function StudyCardComponent({
   const backContent =
     mode === "normal" ? (
       <div className="text-center space-y-4 w-full">
+        {card.pronunciation && (
+          <p className="text-xl text-muted-foreground">{card.pronunciation}</p>
+        )}
         {hasMeanings ? (
           renderMeanings(meanings)
         ) : (
