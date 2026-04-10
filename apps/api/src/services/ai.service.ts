@@ -63,12 +63,8 @@ export const translateWord = async (
   const sourceLanguageName = languageNames[sourceLanguageCode] || sourceLanguageCode;
   const targetLanguageName = languageNames[targetLanguageCode] || targetLanguageCode;
 
-  const pronunciationInstruction = includePronunciation
-    ? `\n"pronunciation": an easy-to-read phonetic transcription of "${word}" in ${sourceLanguageName}, written so a ${targetLanguageName} speaker can read it naturally. Use simple syllables separated by hyphens, enclosed in brackets. Include accent marks on vowels to indicate stress (e.g. é, è, ê, ô, ü). Example for Romanian "săgeată" for a French speaker: [seuh-djà-teuh]. NEVER use IPA symbols.`
-    : "";
-
-  const examplesInstruction = includeExamples
-    ? `, each with "examples": an array of 2 example sentences using the word WITH THAT SPECIFIC MEANING in ${sourceLanguageName} ("sentence"), each with its translation in ${targetLanguageName} ("translation")`
+  const examplesField = includeExamples
+    ? ',\n      "examples": [{"sentence": "example in ' + sourceLanguageName + '", "translation": "translation in ' + targetLanguageName + '"}]'
     : "";
 
   const prompt = `You are a translation assistant. Translate the word "${word}" from ${sourceLanguageName} to ${targetLanguageName}.
@@ -77,20 +73,22 @@ If this word has MULTIPLE distinct meanings (different translations, different p
 
 Return JSON with this exact structure:
 {
-  "word": "${word}",${pronunciationInstruction}
+  "word": "${word}",
+  "pronunciation": "[phonetic transcription]",
   "meanings": [
     {
       "translation": "translation in ${targetLanguageName}",
       "partOfSpeech": "noun/verb/adjective/adverb/etc",
-      "definition": "clear definition in ${targetLanguageName}"${includeExamples ? ',\n      "examples": [{"sentence": "...", "translation": "..."}]' : ""}
+      "definition": "clear definition in ${targetLanguageName}"${examplesField}
     }
   ]
 }
 
 Rules:
+- "pronunciation" MUST be a string with an easy-to-read phonetic transcription of "${word}" in ${sourceLanguageName}, written so a ${targetLanguageName} speaker can read it naturally. Use simple syllables separated by hyphens, enclosed in brackets. Include accent marks on stressed vowels (é, è, ê, ô, ü). Example: Romanian "săgeată" for a French speaker → "[seuh-djà-teuh]". English "try" for a French speaker → "[traï]". NEVER use IPA symbols. NEVER return a boolean.
 - Each meaning must have a DIFFERENT translation. Do not repeat the same translation.
-- ${includeDefinition ? `"definition" must be in ${targetLanguageName}` : '"definition": null'}${examplesInstruction}
-- ${includeTranslation ? "" : '"translation": null for each meaning'}
+- ${includeDefinition ? `"definition" must be in ${targetLanguageName}` : '"definition": null'}
+- ${includeExamples ? `Each meaning must have "examples": 2 sentences using the word WITH THAT SPECIFIC MEANING in ${sourceLanguageName}, each with its translation in ${targetLanguageName}` : ""}
 - If the word has only one meaning, return an array with one element.
 - Maximum 4 meanings.`;
 
@@ -124,7 +122,7 @@ Rules:
 
     return {
       word,
-      pronunciation: parsed.pronunciation || null,
+      pronunciation: typeof parsed.pronunciation === "string" ? parsed.pronunciation : null,
       meanings: meanings.length > 0 ? meanings : [{
         translation: parsed.translation || "",
         partOfSpeech: "",

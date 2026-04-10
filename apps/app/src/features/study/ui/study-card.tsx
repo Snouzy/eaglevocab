@@ -76,14 +76,10 @@ export function StudyCardComponent({
 
     const firstTranslation = card.meanings?.[0]?.translation || card.translation || "";
 
-    if (!isFlipped) {
-      if (mode === "normal") {
-        speak(card.word, card.sourceLanguage.name);
-      } else {
-        speak(firstTranslation, card.targetLanguage.name);
-      }
+    if (mode === "normal") {
+      speak(card.word, card.sourceLanguage.name);
     } else {
-      if (mode === "normal") {
+      if (!isFlipped) {
         speak(firstTranslation, card.targetLanguage.name);
       } else {
         speak(card.word, card.sourceLanguage.name);
@@ -232,20 +228,6 @@ export function StudyCardComponent({
         }
         transition={feedback ? { duration: feedback.duration } : {}}
       >
-        <Button
-          onClick={handleTtsClick}
-          variant="ghost"
-          size="icon"
-          aria-label="Speak text"
-          className="absolute top-4 right-4 z-10"
-          disabled={isSpeaking}
-        >
-          {isSpeaking ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Volume2 className="h-4 w-4" />
-          )}
-        </Button>
         <AnimatePresence mode="wait" initial={false}>
           {!isFlipped ? (
             <motion.div
@@ -258,6 +240,16 @@ export function StudyCardComponent({
               className="rounded-2xl border-2 border-border bg-card p-8 shadow-lg flex flex-col items-center justify-center min-h-[240px] cursor-pointer"
             >
               {frontContent}
+              <Button
+                onClick={handleTtsClick}
+                variant="ghost"
+                size="icon"
+                aria-label="Speak text"
+                className="mt-4"
+                disabled={isSpeaking}
+              >
+                {isSpeaking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Volume2 className="h-4 w-4" />}
+              </Button>
             </motion.div>
           ) : (
             <motion.div
@@ -267,8 +259,18 @@ export function StudyCardComponent({
               exit={{ rotateY: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={onFlip}
-              className="rounded-2xl border-2 border-primary/30 bg-card p-8 shadow-lg flex flex-col items-center cursor-pointer"
+              className="rounded-2xl border-2 border-primary/30 bg-card p-8 shadow-lg flex flex-col items-center cursor-pointer max-h-[60vh] overflow-y-auto"
             >
+              <Button
+                onClick={handleTtsClick}
+                variant="ghost"
+                size="icon"
+                aria-label="Speak text"
+                className="shrink-0 self-end mb-2"
+                disabled={isSpeaking}
+              >
+                {isSpeaking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Volume2 className="h-4 w-4" />}
+              </Button>
               {backContent}
             </motion.div>
           )}
