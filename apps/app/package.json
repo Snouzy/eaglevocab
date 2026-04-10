@@ -23,6 +23,7 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@tanstack/react-query": "^5.74.3",
     "better-auth": "^1.2.7",
+    "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.487.0",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@eagle-vocab/typescript-config": "workspace:*",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^4.5.2",

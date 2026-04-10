@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import confetti from "canvas-confetti";
 import { Volume2, Loader2 } from "lucide-react";
 import type { StudyCard, StudyMode } from "../lib/study-session";
 import { Button } from "@/components/ui/button";
@@ -43,44 +44,21 @@ const FEEDBACK_ANIMATIONS: Record<
   },
 };
 
-const PARTICLE_COLORS = ["#22c55e", "#eab308", "#84cc16", "#f59e0b"];
+function fireConfetti() {
+  const defaults = {
+    particleCount: 40,
+    spread: 55,
+    ticks: 40,
+    gravity: 1.2,
+    decay: 0.94,
+    startVelocity: 20,
+    colors: ["#22c55e", "#10b981", "#eab308", "#84cc16"],
+    scalar: 0.8,
+    disableForReducedMotion: true,
+  };
 
-function FeedbackParticles() {
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 16 }, (_, i) => ({
-        angle: (i / 16) * 360 + (i % 2 === 0 ? 8 : -8),
-        distance: 70 + (i % 3) * 25,
-        size: 4 + (i % 3) * 2,
-        delay: (i % 5) * 0.025,
-        color: PARTICLE_COLORS[i % 4],
-      })),
-    [],
-  );
-
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-visible z-20">
-      {particles.map((p, i) => (
-        <motion.div
-          key={i}
-          className="absolute left-1/2 top-1/2 rounded-full"
-          style={{
-            width: p.size,
-            height: p.size,
-            backgroundColor: p.color,
-          }}
-          initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-          animate={{
-            x: Math.cos((p.angle * Math.PI) / 180) * p.distance,
-            y: Math.sin((p.angle * Math.PI) / 180) * p.distance,
-            opacity: 0,
-            scale: 0.2,
-          }}
-          transition={{ duration: 0.6, delay: p.delay, ease: "easeOut" }}
-        />
-      ))}
-    </div>
-  );
+  confetti({ ...defaults, angle: 60, origin: { x: 0.3, y: 0.6 } });
+  confetti({ ...defaults, angle: 120, origin: { x: 0.7, y: 0.6 } });
 }
 
 export function StudyCardComponent({
@@ -110,6 +88,10 @@ export function StudyCardComponent({
       }
     }
   };
+
+  useEffect(() => {
+    if (feedbackQuality === 4) fireConfetti();
+  }, [feedbackQuality]);
 
   const feedback = feedbackQuality
     ? FEEDBACK_ANIMATIONS[feedbackQuality]
@@ -207,7 +189,6 @@ export function StudyCardComponent({
         }
         transition={feedback ? { duration: feedback.duration } : {}}
       >
-        {feedbackQuality === 4 && <FeedbackParticles />}
         <Button
           onClick={handleTtsClick}
           variant="ghost"
