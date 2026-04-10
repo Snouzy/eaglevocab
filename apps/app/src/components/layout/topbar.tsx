@@ -33,12 +33,12 @@ export function Topbar() {
         className="flex items-center gap-2 text-lg lg:hidden"
       >
         <Bird className="h-6 w-6 text-primary" />
-        <span className="font-extrabold text-foreground tracking-tight">EagleVocab</span>
+        <span className="font-bold text-foreground">EagleVocab</span>
       </Link>
       <div className="hidden lg:block lg:flex-1" />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="relative flex items-center gap-2 h-10 rounded-full bg-neutral-900 text-white text-sm font-bold px-3 cursor-pointer hover:bg-neutral-800 transition-colors">
+          <button className="relative flex items-center gap-2 h-10 rounded-xl bg-accent text-foreground text-sm font-semibold px-3 cursor-pointer hover:bg-accent/80 transition-colors">
             <span className="h-7 w-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
               {session?.user?.name?.[0]?.toUpperCase() || "U"}
             </span>

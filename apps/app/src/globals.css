@@ -4,36 +4,36 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 8%;
+    --background: 210 20% 98%;
+    --foreground: 220 15% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    --card-foreground: 220 15% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
-    --muted: 40 10% 96%;
-    --muted-foreground: 25 5% 40%;
-    --accent: 48 100% 96%;
-    --accent-foreground: 0 0% 8%;
-    --destructive: 0 72% 51%;
+    --popover-foreground: 220 15% 10%;
+    --muted: 210 15% 95%;
+    --muted-foreground: 215 12% 50%;
+    --accent: 210 15% 95%;
+    --accent-foreground: 220 15% 10%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 35 10% 90%;
-    --input: 35 10% 90%;
-    --primary: 43 96% 56%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 40 10% 96%;
-    --secondary-foreground: 0 0% 8%;
-    --ring: 43 96% 56%;
+    --border: 214 18% 88%;
+    --input: 214 18% 88%;
+    --primary: 142 71% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --ring: 142 71% 45%;
     --radius: 0.75rem;
 
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
 
-    --sidebar-bg: 0 0% 5%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-muted: 0 0% 50%;
-    --sidebar-active: 43 96% 56%;
-    --sidebar-active-bg: 43 50% 15%;
-    --sidebar-border: 0 0% 14%;
+    --sidebar-bg: 0 0% 100%;
+    --sidebar-foreground: 220 15% 10%;
+    --sidebar-muted: 215 12% 55%;
+    --sidebar-active: 142 71% 45%;
+    --sidebar-active-bg: 142 76% 96%;
+    --sidebar-border: 214 18% 90%;
   }
 }
 
@@ -43,8 +43,14 @@
   }
 
   body {
-    @apply bg-background text-foreground text-base;
+    @apply bg-background text-foreground;
     font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
 }
 

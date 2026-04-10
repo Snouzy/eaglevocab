@@ -29,14 +29,14 @@ export function Sidebar() {
   const location = useLocation();
 
   return (
-    <aside className="hidden lg:flex w-[280px] flex-col h-full bg-sidebar border-r border-sidebar-border">
-      <div className="h-16 flex items-center px-6 border-b border-sidebar-border">
+    <aside className="hidden lg:flex w-[260px] flex-col h-full bg-card border-r border-border">
+      <div className="h-16 flex items-center px-6 border-b border-border">
         <Link
           to="/dashboard"
           className="flex items-center gap-2 text-lg"
         >
-          <Bird className="h-6 w-6 text-sidebar-active" />
-          <span className="font-extrabold text-sidebar-foreground tracking-tight">EagleVocab</span>
+          <Bird className="h-6 w-6 text-primary" />
+          <span className="font-bold text-foreground">EagleVocab</span>
         </Link>
       </div>
 
@@ -51,16 +51,16 @@ export function Sidebar() {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  "relative flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg mx-3 transition-colors",
+                  "relative flex items-center gap-3 px-4 py-3 text-base font-medium rounded-xl mx-3 transition-colors",
                   isActive
-                    ? "text-sidebar-active"
-                    : "text-sidebar-muted hover:text-sidebar-foreground hover:bg-white/5"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 )}
               >
                 {isActive && (
                   <motion.div
                     layoutId="sidebarActiveIndicator"
-                    className="absolute inset-0 bg-sidebar-active-bg rounded-lg border-l-[3px] border-sidebar-active"
+                    className="absolute inset-0 bg-primary/10 rounded-xl"
                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                   />
                 )}
