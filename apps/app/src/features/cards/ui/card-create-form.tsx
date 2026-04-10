@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Combobox } from "@/components/ui/combobox";
 import { Loader2, Check, ArrowRight, Languages, Volume2 } from "lucide-react";
 import { useTts } from "@/features/study/hooks/use-tts";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
@@ -88,8 +89,8 @@ export function CardCreateForm() {
   }, [word]);
 
   const sourceLang = languages.find((l: any) => l.id === sourceLanguageId);
-  const targetLang = languages.find((l: any) => l.id === targetLanguageId);
   const bothLangsSet = !!sourceLanguageId && !!targetLanguageId;
+  const decks = decksData?.data?.decks || [];
 
   const { suggestions, isLoading: isSuggesting } = useSuggest(
     suggestEnabled ? debouncedWord : "",
@@ -126,6 +127,34 @@ export function CardCreateForm() {
       localStorage.setItem("sourceLanguageId", sourceLanguageId);
     }
   }, [sourceLanguageId]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("targetLanguageId");
+    if (saved && !targetLanguageId) {
+      setValue("targetLanguageId", saved);
+    }
+  }, [targetLanguageId, setValue]);
+
+  useEffect(() => {
+    if (targetLanguageId) {
+      localStorage.setItem("targetLanguageId", targetLanguageId);
+    }
+  }, [targetLanguageId]);
+
+  const selectedDeckId = watch("deckId");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("deckId");
+    if (saved && !selectedDeckId && decks.some((d: any) => d.id === saved)) {
+      setValue("deckId", saved);
+    }
+  }, [selectedDeckId, decks, setValue]);
+
+  useEffect(() => {
+    if (selectedDeckId) {
+      localStorage.setItem("deckId", selectedDeckId);
+    }
+  }, [selectedDeckId]);
 
   async function handleTranslate() {
     setIsTranslating(true);
@@ -180,6 +209,7 @@ export function CardCreateForm() {
       setValue("sourceLanguageId", currentSource);
       setValue("targetLanguageId", currentTarget);
       if (bookId) setValue("bookId", bookId);
+      if (selectedDeckId) setValue("deckId", selectedDeckId);
 
       setTimeout(() => setJustSaved(false), 1500);
     } catch (error) {
@@ -188,7 +218,6 @@ export function CardCreateForm() {
     }
   }
 
-  const decks = decksData?.data?.decks || [];
   const books = booksData?.data?.books || [];
   const hasOrganizeOptions = decks.length > 0 || (books.length > 0 && !bookId);
 
@@ -199,47 +228,31 @@ export function CardCreateForm() {
       {/* Language bar */}
       <div className="flex items-center gap-3">
         <div className="flex-1">
-          <Label htmlFor="sourceLanguage" className="sr-only">
-            Source language
-          </Label>
-          <Select
+          <Combobox
+            id="sourceLanguage"
+            aria-label="Source language"
+            options={languages.map((l: any) => ({ value: l.id, label: l.name, icon: l.flag }))}
             value={sourceLanguageId}
             onValueChange={(value) => setValue("sourceLanguageId", value)}
-          >
-            <SelectTrigger id="sourceLanguage" aria-label="Source language" className="h-10 text-sm">
-              <SelectValue placeholder="Source..." />
-            </SelectTrigger>
-            <SelectContent>
-              {languages.map((lang: any) => (
-                <SelectItem key={lang.id} value={lang.id}>
-                  {lang.flag} {lang.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            placeholder="Source..."
+            searchPlaceholder="Search language..."
+            className="h-10 text-sm"
+          />
         </div>
 
         <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
 
         <div className="flex-1">
-          <Label htmlFor="targetLanguage" className="sr-only">
-            Target language
-          </Label>
-          <Select
+          <Combobox
+            id="targetLanguage"
+            aria-label="Target language"
+            options={languages.map((l: any) => ({ value: l.id, label: l.name, icon: l.flag }))}
             value={targetLanguageId}
             onValueChange={(value) => setValue("targetLanguageId", value)}
-          >
-            <SelectTrigger id="targetLanguage" aria-label="Target language" className="h-10 text-sm">
-              <SelectValue placeholder="Target..." />
-            </SelectTrigger>
-            <SelectContent>
-              {languages.map((lang: any) => (
-                <SelectItem key={lang.id} value={lang.id}>
-                  {lang.flag} {lang.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            placeholder="Target..."
+            searchPlaceholder="Search language..."
+            className="h-10 text-sm"
+          />
         </div>
       </div>
 
