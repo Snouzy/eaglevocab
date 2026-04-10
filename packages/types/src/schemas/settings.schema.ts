@@ -5,6 +5,7 @@ export const updateSettingsSchema = z.object({
   showPronunciation: z.boolean().optional(),
   showExamples: z.boolean().optional(),
   showDefinition: z.boolean().optional(),
+  readwiseToken: z.string().nullable().optional(),
 });
 
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;

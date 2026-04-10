@@ -104,6 +104,7 @@ model UserSettings {
   showPronunciation Boolean  @default(true)
   showExamples      Boolean  @default(true)
   showDefinition    Boolean  @default(true)
+  readwiseToken     String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 

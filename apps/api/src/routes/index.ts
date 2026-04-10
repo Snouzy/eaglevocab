@@ -11,6 +11,7 @@ import {
   translateRequestSchema,
   suggestRequestSchema,
   updateSettingsSchema,
+  readwiseImportSchema,
 } from "@eagle-vocab/types";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { validate } from "../middlewares/validation.middleware";
@@ -21,6 +22,7 @@ import * as bookController from "../controllers/book.controller";
 import * as languageController from "../controllers/language.controller";
 import * as translationController from "../controllers/translation.controller";
 import * as settingsController from "../controllers/settings.controller";
+import * as readwiseController from "../controllers/readwise.controller";
 
 const router: Router = Router();
 
@@ -122,6 +124,15 @@ router.patch(
   authMiddleware,
   validate(updateSettingsSchema),
   settingsController.updateSettings
+);
+
+router.get("/readwise/books", authMiddleware, readwiseController.listBooks);
+router.get("/readwise/books/:bookId/highlights", authMiddleware, readwiseController.listHighlights);
+router.post(
+  "/readwise/import",
+  authMiddleware,
+  validate(readwiseImportSchema),
+  readwiseController.importHighlights
 );
 
 export default router;

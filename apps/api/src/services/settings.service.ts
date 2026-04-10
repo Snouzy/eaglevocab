@@ -53,7 +53,7 @@ export const updateSettings = async (
   try {
     await ensureSettings(userId);
 
-    const data: any = { ...input };
+    const data: Record<string, unknown> = { ...input };
     if (data.nativeLanguageId) {
       data.nativeLanguageId = await resolveLanguageId(data.nativeLanguageId);
     }

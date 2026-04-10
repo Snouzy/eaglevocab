@@ -10,7 +10,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Plus, Pencil, X, GraduationCap } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, X, GraduationCap, Download } from "lucide-react";
+import { ReadwiseImportDialog } from "@/features/readwise/ui/readwise-import-dialog";
+import { useSettings } from "@/features/settings/hooks/use-settings";
 import { toast } from "sonner";
 
 export function BookDetailPage() {
@@ -18,6 +20,7 @@ export function BookDetailPage() {
   const navigate = useNavigate();
   const { data: bookData, isLoading: bookLoading } = useBookDetail(bookId!);
   const removeCardMutation = useRemoveCardFromBook(bookId!);
+  const { data: settingsData } = useSettings();
 
   const book = bookData?.data;
   const cards = book?.cards || [];
@@ -62,6 +65,19 @@ export function BookDetailPage() {
               Reverse
             </Button>
           </ReactRouterLink>
+          {settingsData?.data?.readwiseToken && (
+            <ReadwiseImportDialog
+              bookId={bookId}
+              sourceLanguageId={book?.languageId}
+              targetLanguageId={settingsData?.data?.nativeLanguageId}
+              trigger={
+                <Button variant="outline">
+                  <Download className="mr-2 h-4 w-4" />
+                  Readwise
+                </Button>
+              }
+            />
+          )}
           <Button onClick={() => navigate(`/cards/new?bookId=${bookId}`)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Word
