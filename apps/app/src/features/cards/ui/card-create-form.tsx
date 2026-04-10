@@ -16,7 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Check, ArrowRight, Languages } from "lucide-react";
+import { Loader2, Check, ArrowRight, Languages, Volume2 } from "lucide-react";
+import { useTts } from "@/features/study/hooks/use-tts";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { cn } from "@/shared/lib/utils";
 import { useSearchParams } from "react-router";
@@ -44,6 +45,7 @@ export function CardCreateForm() {
   const [translationResult, setTranslationResult] =
     useState<TranslationResult | null>(null);
   const [isTranslating, setIsTranslating] = useState(false);
+  const { speak, isSpeaking } = useTts();
   const [justSaved, setJustSaved] = useState(false);
   const [suggestEnabled, setSuggestEnabled] = useState(true);
 
@@ -69,7 +71,8 @@ export function CardCreateForm() {
     formState: { errors },
   } = useForm<CreateCardInput>({
     resolver: zodResolver(createCardSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
+    shouldFocusError: false,
   });
 
   const word = watch("word");
@@ -380,12 +383,30 @@ export function CardCreateForm() {
             {translationResult.pronunciation && (
               <div>
                 <Label htmlFor="pronunciation">Pronunciation</Label>
-                <Input
-                  id="pronunciation"
-                  placeholder="Pronunciation"
-                  {...register("pronunciation")}
-                  className="mt-1.5 bg-background"
-                />
+                <div className="relative mt-1.5">
+                  <Input
+                    id="pronunciation"
+                    placeholder="Pronunciation"
+                    {...register("pronunciation")}
+                    className="bg-background pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const lang = languages.find((l: any) => l.id === sourceLanguageId);
+                      if (lang && word) speak(word, lang.name);
+                    }}
+                    disabled={isSpeaking}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg"
+                    aria-label="Listen to pronunciation"
+                  >
+                    {isSpeaking ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Volume2 className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
               </div>
             )}
 
