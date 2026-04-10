@@ -162,6 +162,7 @@ model Card {
   pronunciation    String?
   definition       String?   @db.Text
   examples         Json?
+  meanings         Json?
   notes            String?   @db.Text
   imageUrl         String?
   sourceLanguageId String

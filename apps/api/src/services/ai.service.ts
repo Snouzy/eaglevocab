@@ -6,15 +6,17 @@ const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY,
 });
 
+export interface MeaningContent {
+  translation: string;
+  partOfSpeech: string;
+  definition: string;
+  examples: Array<{ sentence: string; translation: string }> | null;
+}
+
 export interface TranslationContent {
   word: string;
-  translation: string | null;
   pronunciation: string | null;
-  definition: string | null;
-  examples: Array<{
-    sentence: string;
-    translation: string;
-  }> | null;
+  meanings: MeaningContent[];
 }
 
 const languageNames: Record<string, string> = {
@@ -61,35 +63,36 @@ export const translateWord = async (
   const sourceLanguageName = languageNames[sourceLanguageCode] || sourceLanguageCode;
   const targetLanguageName = languageNames[targetLanguageCode] || targetLanguageCode;
 
-  const requestFields: string[] = [
-    `word: the original word "${word}"`,
-  ];
+  const pronunciationInstruction = includePronunciation
+    ? `\n"pronunciation": an easy-to-read phonetic transcription of "${word}" in ${sourceLanguageName}, written so a ${targetLanguageName} speaker can read it naturally. Use simple syllables separated by hyphens, enclosed in brackets. Include accent marks on vowels to indicate stress (e.g. é, è, ê, ô, ü). Example for Romanian "săgeată" for a French speaker: [seuh-djà-teuh]. NEVER use IPA symbols.`
+    : "";
 
-  if (includeTranslation) {
-    requestFields.push(`translation: the translation in ${targetLanguageName}`);
-  }
-  if (includePronunciation) {
-    requestFields.push(
-      `pronunciation: an easy-to-read phonetic transcription of the original word "${word}" in ${sourceLanguageName}, written so that a ${targetLanguageName} speaker can read it naturally. Use simple syllables separated by hyphens, enclosed in brackets. Include accent marks on vowels to indicate stress and correct pronunciation (e.g. é, è, ê, ô, ü, etc.). Example for Romanian "misterele" for a French speaker: [mi-sté-ré-lè]. Example for Romanian "săgeată" for a French speaker: [seuh-djà-teuh]. NEVER use IPA symbols like ʃ, ɛ, ŋ, θ, etc.`
-    );
-  }
-  if (includeDefinition) {
-    requestFields.push(`definition: a clear definition in ${targetLanguageName}`);
-  }
-  if (includeExamples) {
-    requestFields.push(
-      `examples: an array of 2-3 example sentences using the word in ${sourceLanguageName} (sentence field), each with its translation in ${targetLanguageName} (translation field)`
-    );
-  }
+  const examplesInstruction = includeExamples
+    ? `, each with "examples": an array of 2 example sentences using the word WITH THAT SPECIFIC MEANING in ${sourceLanguageName} ("sentence"), each with its translation in ${targetLanguageName} ("translation")`
+    : "";
 
   const prompt = `You are a translation assistant. Translate the word "${word}" from ${sourceLanguageName} to ${targetLanguageName}.
 
-Provide the response in JSON format with the following fields:
-${requestFields.map((field, i) => `${i + 1}. ${field}`).join("\n")}
+If this word has MULTIPLE distinct meanings (different translations, different parts of speech, or different contexts), list ALL of them. For example, "sole" in English has 3 meanings: shoe sole, the fish, and "only/unique".
 
-For fields not requested, use null.
-For examples array, if not requested or cannot be provided, use null.
-Ensure the response is valid JSON.`;
+Return JSON with this exact structure:
+{
+  "word": "${word}",${pronunciationInstruction}
+  "meanings": [
+    {
+      "translation": "translation in ${targetLanguageName}",
+      "partOfSpeech": "noun/verb/adjective/adverb/etc",
+      "definition": "clear definition in ${targetLanguageName}"${includeExamples ? ',\n      "examples": [{"sentence": "...", "translation": "..."}]' : ""}
+    }
+  ]
+}
+
+Rules:
+- Each meaning must have a DIFFERENT translation. Do not repeat the same translation.
+- ${includeDefinition ? `"definition" must be in ${targetLanguageName}` : '"definition": null'}${examplesInstruction}
+- ${includeTranslation ? "" : '"translation": null for each meaning'}
+- If the word has only one meaning, return an array with one element.
+- Maximum 4 meanings.`;
 
   try {
     const response = await openai.chat.completions.create({
@@ -102,7 +105,7 @@ Ensure the response is valid JSON.`;
       ],
       response_format: { type: "json_object" },
       temperature: 0.7,
-      max_tokens: 500,
+      max_tokens: 1000,
     });
 
     const message = response.choices[0]?.message;
@@ -112,12 +115,22 @@ Ensure the response is valid JSON.`;
 
     const parsed = JSON.parse(message.content);
 
+    const meanings: MeaningContent[] = (parsed.meanings || []).map((m: any) => ({
+      translation: m.translation || "",
+      partOfSpeech: m.partOfSpeech || "",
+      definition: m.definition || "",
+      examples: m.examples || null,
+    }));
+
     return {
       word,
-      translation: parsed.translation || null,
       pronunciation: parsed.pronunciation || null,
-      definition: parsed.definition || null,
-      examples: parsed.examples || null,
+      meanings: meanings.length > 0 ? meanings : [{
+        translation: parsed.translation || "",
+        partOfSpeech: "",
+        definition: parsed.definition || "",
+        examples: parsed.examples || null,
+      }],
     };
   } catch (error) {
     logger.error("Translation service error", error);

@@ -1,5 +1,12 @@
 export type StudyMode = "normal" | "reverse";
 
+export interface StudyMeaning {
+  translation: string;
+  partOfSpeech: string;
+  definition: string;
+  examples: Array<{ sentence: string; translation: string }> | null;
+}
+
 export interface StudyCard {
   id: string;
   word: string;
@@ -7,6 +14,7 @@ export interface StudyCard {
   pronunciation: string | null;
   definition: string | null;
   examples: Array<{ sentence: string; translation: string }> | null;
+  meanings: StudyMeaning[] | null;
   sourceLanguage: { name: string; flag: string | null };
   targetLanguage: { name: string; flag: string | null };
 }

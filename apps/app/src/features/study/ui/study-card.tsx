@@ -74,15 +74,17 @@ export function StudyCardComponent({
     e.stopPropagation();
     if (isSpeaking) return;
 
+    const firstTranslation = card.meanings?.[0]?.translation || card.translation || "";
+
     if (!isFlipped) {
       if (mode === "normal") {
         speak(card.word, card.sourceLanguage.name);
       } else {
-        speak(card.translation || "", card.targetLanguage.name);
+        speak(firstTranslation, card.targetLanguage.name);
       }
     } else {
       if (mode === "normal") {
-        speak(card.translation || "", card.targetLanguage.name);
+        speak(firstTranslation, card.targetLanguage.name);
       } else {
         speak(card.word, card.sourceLanguage.name);
       }
@@ -122,6 +124,13 @@ export function StudyCardComponent({
     </div>
   );
 
+  const meanings = card.meanings;
+  const hasMeanings = meanings && meanings.length > 0;
+
+  const reverseLabel = hasMeanings
+    ? meanings.map((m) => m.translation).join(", ")
+    : card.translation || "—";
+
   const frontContent =
     mode === "normal" ? (
       <div className="text-center space-y-3">
@@ -135,25 +144,50 @@ export function StudyCardComponent({
       </div>
     ) : (
       <div className="text-center space-y-3">
-        <p className="text-3xl sm:text-4xl font-bold">
-          {card.translation || "—"}
-        </p>
+        <p className="text-3xl sm:text-4xl font-bold">{reverseLabel}</p>
         <p className="text-sm text-muted-foreground pt-2">
           {card.targetLanguage.flag} {card.targetLanguage.name}
         </p>
       </div>
     );
 
+  const renderMeanings = (items: NonNullable<typeof meanings>) => (
+    <div className="space-y-3 w-full text-left">
+      {items.map((m, i) => (
+        <div key={i} className="rounded-xl bg-muted p-3 space-y-1.5">
+          <div className="flex items-baseline gap-2">
+            <span className="text-xl font-bold">{m.translation}</span>
+            {m.partOfSpeech && (
+              <span className="text-xs font-medium text-muted-foreground bg-background px-2 py-0.5 rounded-full">
+                {m.partOfSpeech}
+              </span>
+            )}
+          </div>
+          {m.definition && (
+            <p className="text-base text-muted-foreground">{m.definition}</p>
+          )}
+          {m.examples && m.examples.length > 0 && renderExamples(m.examples)}
+        </div>
+      ))}
+    </div>
+  );
+
   const backContent =
     mode === "normal" ? (
       <div className="text-center space-y-4 w-full">
-        <p className="text-2xl sm:text-3xl font-bold">
-          {card.translation || "—"}
-        </p>
-        {card.definition && (
-          <p className="text-lg text-muted-foreground">{card.definition}</p>
+        {hasMeanings ? (
+          renderMeanings(meanings)
+        ) : (
+          <>
+            <p className="text-2xl sm:text-3xl font-bold">
+              {card.translation || "—"}
+            </p>
+            {card.definition && (
+              <p className="text-lg text-muted-foreground">{card.definition}</p>
+            )}
+            {card.examples && card.examples.length > 0 && renderExamples(card.examples)}
+          </>
         )}
-        {card.examples && card.examples.length > 0 && renderExamples(card.examples)}
       </div>
     ) : (
       <div className="text-center space-y-4 w-full">
@@ -161,10 +195,16 @@ export function StudyCardComponent({
         {card.pronunciation && (
           <p className="text-xl text-muted-foreground">{card.pronunciation}</p>
         )}
-        {card.definition && (
-          <p className="text-lg text-muted-foreground">{card.definition}</p>
+        {hasMeanings ? (
+          renderMeanings(meanings)
+        ) : (
+          <>
+            {card.definition && (
+              <p className="text-lg text-muted-foreground">{card.definition}</p>
+            )}
+            {card.examples && card.examples.length > 0 && renderExamples(card.examples)}
+          </>
         )}
-        {card.examples && card.examples.length > 0 && renderExamples(card.examples)}
       </div>
     );
 

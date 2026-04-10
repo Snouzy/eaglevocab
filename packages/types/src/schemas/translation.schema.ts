@@ -16,11 +16,10 @@ export const translateRequestSchema = z.object({
 
 export type TranslateRequest = z.infer<typeof translateRequestSchema>;
 
-export const translationResponseSchema = z.object({
-  word: z.string(),
-  translation: z.string().nullable(),
-  pronunciation: z.string().nullable(),
-  definition: z.string().nullable(),
+const meaningSchema = z.object({
+  translation: z.string(),
+  partOfSpeech: z.string(),
+  definition: z.string(),
   examples: z
     .array(
       z.object({
@@ -29,6 +28,14 @@ export const translationResponseSchema = z.object({
       })
     )
     .nullable(),
+});
+
+export type Meaning = z.infer<typeof meaningSchema>;
+
+export const translationResponseSchema = z.object({
+  word: z.string(),
+  pronunciation: z.string().nullable(),
+  meanings: z.array(meaningSchema),
 });
 
 export type TranslationResponse = z.infer<typeof translationResponseSchema>;

@@ -28,11 +28,16 @@ import { useDecks } from "@/features/decks/hooks/use-decks";
 import { useSettings } from "@/features/settings/hooks/use-settings";
 import { useBooks, useBookDetail } from "@/features/books/hooks/use-books";
 
-interface TranslationResult {
-  translation: string | null;
-  pronunciation: string | null;
-  definition: string | null;
+interface MeaningResult {
+  translation: string;
+  partOfSpeech: string;
+  definition: string;
   examples: Array<{ sentence: string; translation: string }> | null;
+}
+
+interface TranslationResult {
+  pronunciation: string | null;
+  meanings: MeaningResult[];
 }
 
 export function CardCreateForm() {
@@ -135,12 +140,15 @@ export function CardCreateForm() {
       });
 
       if (result.data) {
-        setTranslationResult(result.data);
-        setValue("translation", result.data.translation || "");
-        setValue("pronunciation", result.data.pronunciation || "");
-        setValue("definition", result.data.definition || "");
-        if (result.data.examples) {
-          setValue("examples", result.data.examples);
+        const data = result.data;
+        setTranslationResult(data);
+        setValue("pronunciation", data.pronunciation || "");
+        if (data.meanings?.length) {
+          const first = data.meanings[0]!;
+          setValue("translation", first.translation);
+          setValue("definition", first.definition);
+          if (first.examples) setValue("examples", first.examples);
+          setValue("meanings", data.meanings);
         }
         toast.success("Translation completed");
       }
@@ -181,11 +189,7 @@ export function CardCreateForm() {
   const books = booksData?.data?.books || [];
   const hasOrganizeOptions = decks.length > 0 || (books.length > 0 && !bookId);
 
-  const resultFields: { key: string; label: string; field: "translation" | "pronunciation" | "definition"; value: string | null }[] = [
-    { key: "translation", label: "Translation", field: "translation", value: translationResult?.translation ?? null },
-    { key: "pronunciation", label: "Pronunciation", field: "pronunciation", value: translationResult?.pronunciation ?? null },
-    { key: "definition", label: "Definition", field: "definition", value: translationResult?.definition ?? null },
-  ];
+  const hasMeanings = translationResult && translationResult.meanings.length > 0;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -371,40 +375,59 @@ export function CardCreateForm() {
           </div>
         )}
 
-        {translationResult && !isTranslating && (
+        {hasMeanings && !isTranslating && (
           <div className="p-5 space-y-4 animate-in fade-in duration-200">
-            {resultFields.map((rf) =>
-              rf.value ? (
-                <div key={rf.key}>
-                  <Label htmlFor={rf.key}>{rf.label}</Label>
-                  <Input
-                    id={rf.key}
-                    placeholder={rf.label}
-                    {...register(rf.field)}
-                    className="mt-1.5 bg-background"
-                  />
-                </div>
-              ) : null
-            )}
-
-            {translationResult.examples && translationResult.examples.length > 0 && (
+            {translationResult.pronunciation && (
               <div>
-                <Label>Examples</Label>
-                <div className="mt-1.5 space-y-2">
-                  {translationResult.examples.map((ex, i) => (
-                    <div
-                      key={i}
-                      className="p-3 bg-muted border border-border rounded-lg"
-                    >
-                      <p className="text-sm leading-relaxed line-clamp-3">{ex.sentence}</p>
-                      <p className="text-sm text-muted-foreground leading-relaxed mt-1 line-clamp-2">
-                        {ex.translation}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                <Label htmlFor="pronunciation">Pronunciation</Label>
+                <Input
+                  id="pronunciation"
+                  placeholder="Pronunciation"
+                  {...register("pronunciation")}
+                  className="mt-1.5 bg-background"
+                />
               </div>
             )}
+
+            <div>
+              <Label className="mb-2 block">
+                {translationResult.meanings.length > 1
+                  ? `${translationResult.meanings.length} meanings found`
+                  : "Meaning"}
+              </Label>
+              <div className="space-y-3">
+                {translationResult.meanings.map((meaning, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-xl border border-border bg-background p-4 space-y-3"
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-lg font-semibold">{meaning.translation}</span>
+                      {meaning.partOfSpeech && (
+                        <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                          {meaning.partOfSpeech}
+                        </span>
+                      )}
+                    </div>
+                    {meaning.definition && (
+                      <p className="text-sm text-muted-foreground">{meaning.definition}</p>
+                    )}
+                    {meaning.examples && meaning.examples.length > 0 && (
+                      <div className="space-y-1.5">
+                        {meaning.examples.map((ex, i) => (
+                          <div key={i} className="p-2.5 bg-muted rounded-lg text-sm">
+                            <p className="leading-relaxed">{ex.sentence}</p>
+                            <p className="text-muted-foreground leading-relaxed mt-0.5">
+                              {ex.translation}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>

@@ -1,5 +1,20 @@
 import { z } from "zod";
 
+const meaningInputSchema = z.object({
+  translation: z.string(),
+  partOfSpeech: z.string(),
+  definition: z.string(),
+  examples: z
+    .array(
+      z.object({
+        sentence: z.string(),
+        translation: z.string(),
+      })
+    )
+    .nullable()
+    .optional(),
+});
+
 export const createCardSchema = z.object({
   word: z.string().min(1).max(200),
   translation: z.string().nullable().optional(),
@@ -14,6 +29,7 @@ export const createCardSchema = z.object({
     )
     .nullable()
     .optional(),
+  meanings: z.array(meaningInputSchema).nullable().optional(),
   notes: z.string().nullable().optional(),
   sourceLanguageId: z.string().min(1),
   targetLanguageId: z.string().min(1),
