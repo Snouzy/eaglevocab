@@ -46,7 +46,7 @@ export const listHighlights = async (
 ): Promise<void> => {
   try {
     const userId = req.user!.id;
-    const bookId = parseInt(req.params.bookId);
+    const bookId = parseInt(req.params.bookId as string);
 
     const settings = await settingsRepository.findByUserId(userId);
 
@@ -136,10 +136,10 @@ export const importHighlights = async (
           await cardRepository.create(
             {
               word: highlight.text,
-              translation: meaning.translation,
+              translation: meaning!.translation,
               pronunciation: translation.pronunciation,
-              definition: meaning.definition,
-              examples: meaning.examples,
+              definition: meaning!.definition,
+              examples: meaning!.examples,
               meanings: translation.meanings,
               sourceLanguageId: body.sourceLanguageId,
               targetLanguageId: body.targetLanguageId,

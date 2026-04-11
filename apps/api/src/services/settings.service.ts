@@ -55,7 +55,7 @@ export const updateSettings = async (
 
     const data: Record<string, unknown> = { ...input };
     if (data.nativeLanguageId) {
-      data.nativeLanguageId = await resolveLanguageId(data.nativeLanguageId);
+      data.nativeLanguageId = await resolveLanguageId(data.nativeLanguageId as string);
     }
 
     const updatedSettings = await settingsRepository.update(userId, data);

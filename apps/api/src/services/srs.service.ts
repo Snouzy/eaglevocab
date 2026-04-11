@@ -16,7 +16,7 @@ export const calculateNextReview = (
   quality: number
 ): SrsResult => {
   const qualityMap: Record<number, number> = { 1: 0, 2: 2, 3: 4, 4: 5 };
-  const q = qualityMap[quality];
+  const q = qualityMap[quality] ?? 0;
 
   let { easeFactor, interval, repetitions } = current;
 
