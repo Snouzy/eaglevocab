@@ -1,3 +1,4 @@
+// This service provides functions to translate words between languages using OpenAI's GPT-4o-mini model. It can return multiple meanings, parts of speech, definitions, and examples for a given word. It also has a function to suggest correct diacritics for a word in a specific language.
 import { OpenAI } from "openai";
 import { env } from "../env";
 import { logger } from "../helpers/logger";
