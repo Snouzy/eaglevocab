@@ -2,7 +2,7 @@
 
 # Eagle Vocab
 
-### * Learn vocabulary from the books you read*
+### * Learn vocabulary from the books you read *
 
 <br />
 
