@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ReadwiseImportInput } from "@eagle-vocab/types";
+import { ReadwiseImportInput, ReadwiseImportBatchInput } from "@eagle-vocab/types";
 import { sendSuccess, sendError } from "../helpers/api-response";
 import { logger } from "../helpers/logger";
 import { settingsRepository } from "../repositories/settings.repository";
@@ -161,6 +161,64 @@ export const importHighlights = async (
       "Import completed",
       201
     );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const importBatch = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = req.user!.id;
+    const body = req.body as ReadwiseImportBatchInput;
+
+    const sourceLang = await languageRepository.findById(body.sourceLanguageId);
+    const targetLang = await languageRepository.findById(body.targetLanguageId);
+
+    if (!sourceLang || !targetLang) {
+      sendError(res, "INVALID_INPUT", "Invalid language IDs", 400);
+      return;
+    }
+
+    let imported = 0;
+    let errors = 0;
+
+    for (const word of body.words) {
+      try {
+        const translation = await translateWord(
+          word,
+          sourceLang.code,
+          targetLang.code
+        );
+
+        if (translation && translation.meanings && translation.meanings.length > 0) {
+          const meaning = translation.meanings[0];
+          await cardRepository.create(
+            {
+              word,
+              translation: meaning!.translation,
+              pronunciation: translation.pronunciation,
+              definition: meaning!.definition,
+              examples: meaning!.examples,
+              meanings: translation.meanings,
+              sourceLanguageId: body.sourceLanguageId,
+              targetLanguageId: body.targetLanguageId,
+              bookId: body.bookId,
+            },
+            userId
+          );
+          imported++;
+        }
+      } catch (err) {
+        logger.error(`Failed to import word: ${word}`, err);
+        errors++;
+      }
+    }
+
+    sendSuccess(res, { imported, errors }, "Batch imported", 201);
   } catch (error) {
     next(error);
   }

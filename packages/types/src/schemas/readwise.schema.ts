@@ -15,3 +15,12 @@ export const readwiseImportSchema = z.object({
 });
 
 export type ReadwiseImportInput = z.infer<typeof readwiseImportSchema>;
+
+export const readwiseImportBatchSchema = z.object({
+  words: z.array(z.string().min(1)).min(1).max(10),
+  bookId: z.string().min(1),
+  sourceLanguageId: z.string().min(1),
+  targetLanguageId: z.string().min(1),
+});
+
+export type ReadwiseImportBatchInput = z.infer<typeof readwiseImportBatchSchema>;

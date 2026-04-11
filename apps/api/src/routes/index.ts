@@ -12,6 +12,7 @@ import {
   suggestRequestSchema,
   updateSettingsSchema,
   readwiseImportSchema,
+  readwiseImportBatchSchema,
 } from "@eagle-vocab/types";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { validate } from "../middlewares/validation.middleware";
@@ -133,6 +134,12 @@ router.post(
   authMiddleware,
   validate(readwiseImportSchema),
   readwiseController.importHighlights
+);
+router.post(
+  "/readwise/import/batch",
+  authMiddleware,
+  validate(readwiseImportBatchSchema),
+  readwiseController.importBatch
 );
 
 export default router;

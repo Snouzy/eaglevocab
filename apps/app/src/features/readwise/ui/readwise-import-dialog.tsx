@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -10,14 +12,16 @@ import {
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
 } from "@/components/ui/responsive-dialog";
-import { Loader2, BookOpen, Download, Check, Search } from "lucide-react";
+import { Loader2, BookOpen, Download, Check, Search, AlertCircle } from "lucide-react";
 import {
   useReadwiseBooks,
   useReadwiseHighlights,
-  useImportReadwise,
 } from "../hooks/use-readwise";
+import { importReadwiseBatch } from "../lib/readwise.api";
 import type { ReadwiseBook, ReadwiseHighlight } from "../lib/readwise.api";
 import { toast } from "sonner";
+
+const BATCH_SIZE = 5;
 
 interface ReadwiseImportDialogProps {
   bookId?: string;
@@ -40,39 +44,67 @@ export function ReadwiseImportDialog({
     author: string;
   } | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [importProgress, setImportProgress] = useState({ done: 0, total: 0, errors: 0 });
+  const [isImporting, setIsImporting] = useState(false);
+  const [importDone, setImportDone] = useState(false);
 
+  const queryClient = useQueryClient();
   const readwiseBooksQuery = useReadwiseBooks(open);
   const readwiseHighlightsQuery = useReadwiseHighlights(
     selectedReadwiseBook?.id ?? 0
   );
-  const importMutation = useImportReadwise();
 
   const handleSelectBook = (book: { id: number; title: string; author: string }) => {
     setSelectedReadwiseBook(book);
     setStep(2);
   };
 
-  const handleImport = async () => {
-    if (!selectedReadwiseBook || !sourceLanguageId || !targetLanguageId) {
+  const handleImport = useCallback(async () => {
+    if (!selectedReadwiseBook || !sourceLanguageId || !targetLanguageId || !bookId) {
       toast.error("Missing required information");
       return;
     }
 
+    const allHighlights = readwiseHighlightsQuery.data?.data?.highlights ?? [];
+    const words = allHighlights.map((h: ReadwiseHighlight) => h.text);
+    const total = words.length;
+
     setStep(3);
-    await importMutation.mutateAsync({
-      readwiseBookId: selectedReadwiseBook.id,
-      bookId: bookId || undefined,
-      createBook: !bookId
-        ? {
-            title: selectedReadwiseBook.title,
-            author: selectedReadwiseBook.author,
-            languageId: sourceLanguageId,
-          }
-        : undefined,
-      sourceLanguageId,
-      targetLanguageId,
-    });
-  };
+    setIsImporting(true);
+    setImportProgress({ done: 0, total, errors: 0 });
+
+    let totalImported = 0;
+    let totalErrors = 0;
+
+    for (let i = 0; i < words.length; i += BATCH_SIZE) {
+      const batch = words.slice(i, i + BATCH_SIZE);
+      try {
+        const result = await importReadwiseBatch({
+          words: batch,
+          bookId,
+          sourceLanguageId,
+          targetLanguageId,
+        });
+        totalImported += result.data?.imported ?? 0;
+        totalErrors += result.data?.errors ?? 0;
+      } catch {
+        totalErrors += batch.length;
+      }
+      setImportProgress({ done: Math.min(i + BATCH_SIZE, total), total, errors: totalErrors });
+    }
+
+    setImportProgress({ done: total, total, errors: totalErrors });
+    setIsImporting(false);
+    setImportDone(true);
+
+    queryClient.invalidateQueries({ queryKey: ["books"] });
+    queryClient.invalidateQueries({ queryKey: ["book"] });
+    queryClient.invalidateQueries({ queryKey: ["cards"] });
+
+    if (totalImported > 0) {
+      toast.success(`${totalImported} words imported`);
+    }
+  }, [selectedReadwiseBook, sourceLanguageId, targetLanguageId, bookId, readwiseHighlightsQuery.data, queryClient]);
 
   const handleClose = () => {
     setOpen(false);
@@ -80,6 +112,9 @@ export function ReadwiseImportDialog({
       setStep(1);
       setSelectedReadwiseBook(null);
       setSearchQuery("");
+      setImportProgress({ done: 0, total: 0, errors: 0 });
+      setIsImporting(false);
+      setImportDone(false);
     }, 200);
   };
 
@@ -90,6 +125,9 @@ export function ReadwiseImportDialog({
 
   const highlights = readwiseHighlightsQuery.data?.data?.highlights ?? [];
   const highlightCount = highlights.length;
+  const progressPercent = importProgress.total > 0
+    ? Math.round((importProgress.done / importProgress.total) * 100)
+    : 0;
 
   return (
     <ResponsiveDialog open={open} onOpenChange={setOpen}>
@@ -99,7 +137,7 @@ export function ReadwiseImportDialog({
           <ResponsiveDialogTitle>
             {step === 1 && "Select Readwise Book"}
             {step === 2 && "Preview Highlights"}
-            {step === 3 && "Import Results"}
+            {step === 3 && "Import Progress"}
           </ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
 
@@ -223,63 +261,60 @@ export function ReadwiseImportDialog({
                 </Button>
                 <Button
                   onClick={handleImport}
-                  disabled={highlightCount === 0 || importMutation.isPending}
+                  disabled={highlightCount === 0}
                   className="flex-1"
                 >
-                  {importMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Importing...
-                    </>
-                  ) : (
-                    <>
-                      <Download className="mr-2 h-4 w-4" />
-                      Import {highlightCount} words
-                    </>
-                  )}
+                  <Download className="mr-2 h-4 w-4" />
+                  Import {highlightCount} words
                 </Button>
               </div>
             </div>
           )}
 
           {step === 3 && (
-            <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
-              {importMutation.isPending ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center space-y-6">
+              {isImporting ? (
                 <>
                   <Loader2 className="h-12 w-12 animate-spin text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">
-                    Translating and importing...
-                  </p>
+                  <div className="w-full space-y-2">
+                    <Progress value={progressPercent} className="h-2" />
+                    <p className="text-sm text-muted-foreground">
+                      {importProgress.done} / {importProgress.total} words
+                      {importProgress.errors > 0 && (
+                        <span className="text-destructive"> ({importProgress.errors} errors)</span>
+                      )}
+                    </p>
+                  </div>
                 </>
-              ) : importMutation.isSuccess ? (
+              ) : importDone ? (
                 <>
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
                     <Check className="h-8 w-8 text-green-600" />
                   </div>
                   <div>
                     <p className="text-base font-semibold text-foreground">
-                      Import successful
+                      Import complete
                     </p>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Imported {highlightCount} words from{" "}
+                      {importProgress.done - importProgress.errors} words imported from{" "}
                       {selectedReadwiseBook?.title}
                     </p>
+                    {importProgress.errors > 0 && (
+                      <div className="flex items-center justify-center gap-1 mt-2 text-sm text-destructive">
+                        <AlertCircle className="h-3 w-3" />
+                        {importProgress.errors} words failed
+                      </div>
+                    )}
                   </div>
                 </>
-              ) : (
-                <>
-                  <p className="text-sm text-destructive">
-                    Import failed. Please try again.
-                  </p>
-                </>
-              )}
+              ) : null}
 
               <Button
                 onClick={handleClose}
                 className="w-full"
-                disabled={importMutation.isPending}
+                disabled={isImporting}
               >
-                Done
+                {isImporting ? "Importing..." : "Done"}
               </Button>
             </div>
           )}
