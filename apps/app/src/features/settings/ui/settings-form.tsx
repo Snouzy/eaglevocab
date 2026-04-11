@@ -181,7 +181,7 @@ function SettingsFormInner({ settings, languages }: SettingsFormInnerProps) {
             </a>
           </p>
         </div>
-        {settings?.readwiseToken && (
+        {!!settings?.readwiseToken && (
           <div className="flex items-center gap-2 text-sm text-success">
             <div className="h-2 w-2 rounded-full bg-success" />
             Connected
